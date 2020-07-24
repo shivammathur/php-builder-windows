@@ -69,7 +69,13 @@ jobs:
           mkdir builds
           Get-ChildItem C:\php-snap-build\${{ matrix.target }}\* -Recurse -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
+          $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
           Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace "win32","windows" }
+          if(("${{ matrix.config }}" -eq "ts-windows-vs16-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs16-x86")) {
+            Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
+          } else {
+            Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master" }
+          }
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
