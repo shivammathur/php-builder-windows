@@ -23,3 +23,4 @@ Please see the [license file](LICENSE) for more information. This project has mu
 
 - [php/web-rmtools](https://github.com/php/web-rmtools)
 - [microsoft/php-sdk-binary-tools](https://github.com/microsoft/php-sdk-binary-tools)
+- [Oracle instantclient](https://www.oracle.com/downloads/licenses/instant-client-lic.html)
