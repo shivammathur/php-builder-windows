@@ -12,7 +12,7 @@
 - [php-master-ts-windows-vs16-x64.zip](https://dl.bintray.com/shivammathur/php/php-master-ts-windows-vs16-x64.zip)
 - [php-master-nts-windows-vs16-x86.zip](https://dl.bintray.com/shivammathur/php/php-master-nts-windows-vs16-x86.zip)
 - [php-master-ts-windows-vs16-x86.zip](https://dl.bintray.com/shivammathur/php/php-master-ts-windows-vs16-x86.zip)
-- [debug, devel and test packs](https://bintray.com/shivammathur/php/8.0-windows#files)
+- [debug, devel and test packs](https://bintray.com/shivammathur/php/master-windows#files)
 
 ## License
 

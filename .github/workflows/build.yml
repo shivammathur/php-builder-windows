@@ -111,7 +111,7 @@ jobs:
           BINTRAY_REPO: php
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          VERSION=$(curl -sSL https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | grep -Po -m 1 "\d.\d")
+          VERSION='master'
           curl \
           --user "$BINTRAY_USER":"$BINTRAY_KEY" \
           --header "Content-Type: application/json" \
