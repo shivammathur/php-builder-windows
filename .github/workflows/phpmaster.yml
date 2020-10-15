@@ -1,4 +1,4 @@
-name: 'Build PHP'
+name: 'Build PHP master'
 on:
   push:
   pull_request:
@@ -80,16 +80,18 @@ jobs:
           & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "phpmaster ${{ matrix.config }}"
       - name: Collect Artifacts
         run: |
+          $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
           New-Item -ItemType "directory" -Path builds
           Get-ChildItem C:\php-snap-build\${{ matrix.target }}\* -Recurse -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
+          Copy-Item -Path builds -Destination master -Container -Recurse
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
-          $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
-          Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace "win32","windows" }
+          Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace "win32","windows" }
           if(("${{ matrix.config }}" -eq "ts-windows-vs16-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs16-x86")) {
-            Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
+            Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
           } else {
-            Get-ChildItem .\builds *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master" }
+            Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master" }
           }
+          Get-ChildItem .\master\* -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -128,6 +130,7 @@ jobs:
             mv $file ./uploads/
           done
           cd uploads || exit
+          rm -rf *-src-*.zip || true
           for file in ./*; do
             curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X DELETE https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$file" || true
             curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -T "$file" https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/$VERSION/"$file" || true
