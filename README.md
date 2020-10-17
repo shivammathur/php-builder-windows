@@ -7,12 +7,36 @@
 > Build PHP nightly for windows.
 
 ## Builds
-- [php-master-nts-windows-vs16-x64.zip](https://dl.bintray.com/shivammathur/php/php-master-nts-windows-vs16-x64.zip)
-- [php-master-nts-windows-vs16-x64-AVX.zip](https://dl.bintray.com/shivammathur/php/php-master-nts-windows-vs16-x64-AVX.zip)
-- [php-master-ts-windows-vs16-x64.zip](https://dl.bintray.com/shivammathur/php/php-master-ts-windows-vs16-x64.zip)
-- [php-master-nts-windows-vs16-x86.zip](https://dl.bintray.com/shivammathur/php/php-master-nts-windows-vs16-x86.zip)
-- [php-master-ts-windows-vs16-x86.zip](https://dl.bintray.com/shivammathur/php/php-master-ts-windows-vs16-x86.zip)
-- [debug, devel and test packs](https://bintray.com/shivammathur/php/master-windows#files)
+
+Following configurations are build nightly.
+
+- `nts-x64`, `nts-x64-AVX`, `ts-x64`, `nts-x86`, `ts-x86`.
+- `debug-pack`, `devel=pack` for each configuration.
+- `test pack` for the version.
+
+### PHP 8.1.0-dev/master
+[https://bintray.com/shivammathur/php/master-windows#files](https://bintray.com/shivammathur/php/master-windows#files)
+
+### PHP 8.0.0-dev
+[https://bintray.com/shivammathur/php/8.0-windows#files](https://bintray.com/shivammathur/php/8.0-windows#files)
+
+## Install
+
+```ps1
+# Configure
+$php_dir = 'C:\tools\php' # Set this as per your setup
+$arch    = 'x64'          # Set x64 or x86
+$ts      = $False         # Set $False for nts or $True for ts
+$version = '8.1'          # Set 8.0 or 8.1
+
+# Install
+New-Item -Path C:\tools\php -Type Directory -Force
+Invoke-WebRequest -UseBasicParsing -Uri https://dl.bintray.com/shivammathur/php/Install-PhpNightly.ps1 -OutFile $php_dir\Install-PhpNightly.ps1
+. $php_dir\Install-PhpNightly.ps1 -Architecture $arch -ThreadSafe $ts -Path $php_dir -Version $version
+
+# Test
+. $php_dir\php -v
+```
 
 ## License
 
