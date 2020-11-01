@@ -1,2 +1,1 @@
-Install-PhpMaster.ps1
-Install-PhpNightly.ps1
+Get-PhpNightly.ps1

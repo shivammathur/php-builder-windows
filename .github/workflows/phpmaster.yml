@@ -129,10 +129,26 @@ jobs:
           for file in ./builds/*/*; do
             mv $file ./uploads/
           done
-          cd uploads || exit
-          rm -rf *-src-*.zip || true
-          for file in ./*; do
-            curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X DELETE https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$file" || true
-            curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -T "$file" https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/$VERSION/"$file" || true
+          (
+            cd uploads || exit
+            rm -rf *-src-*.zip || true
+            for file in ./*; do
+              curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X DELETE https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$file" || true
+              curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -T "$file" https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/$VERSION/"$file" || true
+            done
+            curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X POST https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/"$VERSION"/publish || true
+          )
+      - name: Update release
+        run: |
+          set -x
+          curl -sLO http://dl.bintray.com/shivammathur/php/Get-PhpNightly.ps1
+          assets=()
+          for asset in ./uploads/*; do
+            assets+=("-a" "$asset")
           done
-          curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X POST https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/"$VERSION"/publish || true
+          assets+=("-a" "./Get-PhpNightly.ps1")
+          git push -f origin :php8.1 || true
+          hub release delete "php8.1" || true
+          hub release create "${assets[@]}" -m "php8.1" "php8.1"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

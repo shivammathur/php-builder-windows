@@ -31,8 +31,8 @@ $version = '8.1'          # Set 8.0 or 8.1
 
 # Install
 New-Item -Path C:\tools\php -Type Directory -Force
-Invoke-WebRequest -UseBasicParsing -Uri https://dl.bintray.com/shivammathur/php/Install-PhpNightly.ps1 -OutFile $php_dir\Install-PhpNightly.ps1
-. $php_dir\Install-PhpNightly.ps1 -Architecture $arch -ThreadSafe $ts -Path $php_dir -Version $version
+Invoke-WebRequest -UseBasicParsing -Uri https://github.com/shivammathur/php-extensions-windows/releases/latest/download/Get-PhpNightly.ps1 -OutFile $php_dir\Get-PhpNightly.ps1
+. $php_dir\Get-PhpNightly.ps1 -Architecture $arch -ThreadSafe $ts -Path $php_dir -Version $version
 
 # Test
 . $php_dir\php -v
