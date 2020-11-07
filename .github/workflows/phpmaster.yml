@@ -70,15 +70,20 @@ jobs:
           $tar_location="C:\Program Files\Git\usr\bin\tar.exe"
           $task_location="C:\php-snap-build\rmtools\bin\snapshot_task.bat"
           $git_script_location="C:\php-snap-build\rmtools\include\Git.php"
+          $snap_script_location="C:\php-snap-build\rmtools\script\snap.php"
+          $branch_script_location="C:\php-snap-build\rmtools\include\Branch.php"
           $config_location="C:\php-snap-build\rmtools\data\config\branch\${{ matrix.arch }}\phpmaster.ini"
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\git.exe", $git_location) | Set-Content -Path $git_script_location
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\tar.exe", $tar_location) | Set-Content -Path $git_script_location
           ((Get-Content -path $task_location -Raw) -replace ">> %LOG_FILE% 2<&1", "") | Set-Content -Path $task_location
+          ((Get-Content -path $snap_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $snap_script_location
+          ((Get-Content -path $branch_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $branch_script_location
           ((Get-Content -path $config_location -Raw) -replace "pgo=1", "pgo=0") | Set-Content -Path $config_location
       - name: build PHP
         run: |
           $ErrorActionPreference = "Stop"
           & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "phpmaster ${{ matrix.config }}"
+          Get-ChildItem C:/php-snap-build/${{ matrix.target }} -Recurse
       - name: Collect Artifacts
         run: |
           $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
