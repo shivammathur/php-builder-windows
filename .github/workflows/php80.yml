@@ -77,12 +77,16 @@ jobs:
           ((Get-Content -path $config_location -Raw) -replace "pgo=1", "pgo=0") | Set-Content -Path $config_location
       - name: build PHP
         run: |
+          $ErrorActionPreference = "Stop"
           & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "php80 ${{ matrix.config }}"
       - name: Collect Artifacts
         run: |
           New-Item -ItemType "directory" -Path builds
           Get-ChildItem C:\php-snap-build\${{ matrix.target }}\* -Recurse -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\PHP-8.0.json -Destination .\builds\${{ matrix.config }}.json
+          if((Get-ChildItem .\builds\*.zip).Count -lt 5) {
+            exit 1
+          }
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
