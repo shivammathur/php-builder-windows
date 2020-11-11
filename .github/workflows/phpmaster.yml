@@ -153,11 +153,10 @@ jobs:
           curl -sLO http://dl.bintray.com/shivammathur/php/Get-PhpNightly.ps1
           assets=()
           for asset in ./uploads/*; do
-            assets+=("-a" "$asset")
+            assets+=("$asset")
           done
-          assets+=("-a" "./Get-PhpNightly.ps1")
-          git push -f origin :php8.1 || true
-          hub release delete "php8.1" || true
-          hub release create "${assets[@]}" -m "php8.1" "php8.1"
+          assets+=("./Get-PhpNightly.ps1")
+          gh release delete "php8.1" -y || true
+          gh release create "php8.1" "${assets[@]}" -t "php8.1" -n "php8.1"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
