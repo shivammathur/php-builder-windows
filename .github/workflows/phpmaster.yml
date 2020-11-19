@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip-build')"
-    runs-on: windows-latest
+    runs-on: windows-2019
     strategy:
       fail-fast: false
       matrix:
@@ -81,9 +81,9 @@ jobs:
           ((Get-Content -path $config_location -Raw) -replace "pgo=1", "pgo=0") | Set-Content -Path $config_location
       - name: build PHP
         run: |
+          C:\php-snap-build\php-sdk\bin\vswhere
           $ErrorActionPreference = "Stop"
           & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "phpmaster ${{ matrix.config }}"
-          Get-ChildItem C:/php-snap-build/${{ matrix.target }} -Recurse
       - name: Collect Artifacts
         run: |
           $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
