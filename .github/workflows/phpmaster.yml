@@ -151,11 +151,13 @@ jobs:
         run: |
           set -x
           curl -sLO http://dl.bintray.com/shivammathur/php/Get-PhpNightly.ps1
+          curl -sLO http://dl.bintray.com/shivammathur/php/Get-Php.ps1
           assets=()
           for asset in ./uploads/*; do
             assets+=("$asset")
           done
           assets+=("./Get-PhpNightly.ps1")
+          assets+=("./Get-Php.ps1")
           gh release delete "php8.1" -y || true
           gh release create "php8.1" "${assets[@]}" -t "php8.1" -n "php8.1"
         env:

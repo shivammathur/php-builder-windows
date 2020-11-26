@@ -79,7 +79,6 @@ jobs:
           ((Get-Content -path $snap_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $snap_script_location
           ((Get-Content -path $branch_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $branch_script_location
           ((Get-Content -path $config_location -Raw) -replace "pgo=1", "pgo=0") | Set-Content -Path $config_location
-          ((Get-Content -path $config_location -Raw) -replace "heads/PHP-8.0", "heads/PHP-8.0.0") | Set-Content -Path $config_location
       - name: build PHP
         run: |
           C:\php-snap-build\php-sdk\bin\vswhere
@@ -141,11 +140,13 @@ jobs:
         run: |
           set -x
           curl -sLO http://dl.bintray.com/shivammathur/php/Get-PhpNightly.ps1
+          curl -sLO http://dl.bintray.com/shivammathur/php/Get-Php.ps1
           assets=()
           for asset in ./uploads/*; do
             assets+=("$asset")
           done
           assets+=("./Get-PhpNightly.ps1")
+          assets+=("./Get-Php.ps1")
           gh release delete "php8.0" -y || true
           gh release create "php8.0" "${assets[@]}" -t "php8.0" -n "php8.0"
         env:

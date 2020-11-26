@@ -17,7 +17,7 @@ Following configurations are build nightly.
 ### PHP 8.1.0-dev/master
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.1](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.1)
 
-### PHP 8.0.0-dev
+### PHP 8.0.x-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.0](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.0)
 
 ## Install
@@ -31,8 +31,8 @@ $version = '8.1'          # Set 8.0 or 8.1
 
 # Install
 New-Item -Path $php_dir -Type Directory -Force
-Invoke-WebRequest -UseBasicParsing -Uri https://github.com/shivammathur/php-builder-windows/releases/latest/download/Get-PhpNightly.ps1 -OutFile $php_dir\Get-PhpNightly.ps1
-. $php_dir\Get-PhpNightly.ps1 -Architecture $arch -ThreadSafe $ts -Path $php_dir -Version $version
+Invoke-WebRequest -UseBasicParsing -Uri https://github.com/shivammathur/php-builder-windows/releases/latest/download/Get-Php.ps1 -OutFile $php_dir\Get-Php.ps1
+. $php_dir\Get-Php.ps1 -Architecture $arch -ThreadSafe $ts -Path $php_dir -Version $version
 
 # Test
 . $php_dir\php -v
