@@ -2,7 +2,7 @@ name: 'Build PHP master'
 on:
   push:
   pull_request:
-  repository_dispatch:
+  workflow_dispatch:
   schedule:
     - cron: '30 23 * * *'
 jobs:
