@@ -106,47 +106,22 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           path: builds
-      - name: Upload to bintray
-        env:
-          BINTRAY_KEY: ${{ secrets.BINTRAY_KEY }}
-          BINTRAY_USER: shivammathur
-          BINTRAY_REPO: php
-          GITHUB_REPOSITORY: ${{ github.repository }}
+      - name: Stage files
         run: |
-          VERSION='8.0'
-          curl \
-          --user "$BINTRAY_USER":"$BINTRAY_KEY" \
-          --header "Content-Type: application/json" \
-          --data " \
-          {\"name\": \"$VERSION-windows\", \
-           \"vcs_url\": \"$GITHUB_REPOSITORY\", \
-           \"licenses\": [\"MIT\"], \
-           \"public_download_numbers\": true, \
-           \"public_stats\": true \
-          }" \
-            https://api.bintray.com/packages/"$BINTRAY_USER"/"$BINTRAY_REPO" || true
           mkdir uploads
           for file in ./builds/*/*; do
             mv $file ./uploads/
           done
-          cd uploads || exit
-          rm -rf *-src-*.zip || true
-          for file in ./*; do
-            curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X DELETE https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$file" || true
-            curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -T "$file" https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/$VERSION/"$file" || true
-          done
-          curl --user "$BINTRAY_USER":"$BINTRAY_KEY" -X POST https://api.bintray.com/content/"$BINTRAY_USER"/"$BINTRAY_REPO"/"$VERSION"-windows/"$VERSION"/publish || true
+          rm -rf uploads/*-src-*.zip || true
       - name: Update release
         run: |
           set -x
-          curl -sLO http://dl.bintray.com/shivammathur/php/Get-PhpNightly.ps1
-          curl -sLO http://dl.bintray.com/shivammathur/php/Get-Php.ps1
           assets=()
           for asset in ./uploads/*; do
             assets+=("$asset")
           done
-          assets+=("./Get-PhpNightly.ps1")
-          assets+=("./Get-Php.ps1")
+          assets+=("./scripts/Get-PhpNightly.ps1")
+          assets+=("./scripts/Get-Php.ps1")
           gh release delete "php8.0" -y || true
           gh release create "php8.0" "${assets[@]}" -t "php8.0" -n "php8.0"
         env:
