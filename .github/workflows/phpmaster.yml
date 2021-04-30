@@ -131,9 +131,12 @@ jobs:
           done
           assets+=("./scripts/Get-PhpNightly.ps1")
           assets+=("./scripts/Get-Php.ps1")
-          gh release delete "php8.1" -y || true
-          gh release create "php8.1" "${assets[@]}" -t "php8.1" -n "php8.1"
-          gh release delete "master" -y || true
-          gh release create "master" "${assets[@]}" -t "master" -n "master"
+          for release in php8.1 master; do
+            if ! gh release view "$release"; then
+              gh release create "$release" "${assets[@]}" -t "$release" -n "$release"
+            else
+              gh release upload "$release" "${assets[@]}" --clobber
+            fi
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
