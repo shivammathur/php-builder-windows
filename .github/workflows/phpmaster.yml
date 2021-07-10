@@ -101,6 +101,8 @@ jobs:
           if((Get-ChildItem .\builds\*.zip).Count -lt 5) {
             exit 1
           }
+          (Get-Content .\builds\${{ matrix.config }}.json | ConvertFrom-Json).revision_last > COMMIT
+          Get-ChildItem .\builds\* -Include ("php-$php_version*.zip", "php-master*.zip") | Foreach-Object { Compress-Archive -update COMMIT $_ }
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -121,7 +123,7 @@ jobs:
           for file in ./builds/*/*; do
             mv $file ./uploads/
           done
-          rm -rf uploads/*-src-*.zip || true
+          rm -rf uploads/*-src-*.zip || true          
       - name: Update release
         run: |
           set -x
