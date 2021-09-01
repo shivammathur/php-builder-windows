@@ -72,16 +72,13 @@ jobs:
           $git_script_location="C:\php-snap-build\rmtools\include\Git.php"
           $snap_script_location="C:\php-snap-build\rmtools\script\snap.php"
           $branch_script_location="C:\php-snap-build\rmtools\include\Branch.php"
-          $config_directory="C:\php-snap-build\rmtools\data\config\branch\${{ matrix.arch }}"
-          $config_location="$config_directory\php81.ini"
-          Copy-Item "$config_directory\php80.ini" -Destination $config_location -Force
+          $config_location="C:\php-snap-build\rmtools\data\config\branch\${{ matrix.arch }}\php81.ini"
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\git.exe", $git_location) | Set-Content -Path $git_script_location
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\tar.exe", $tar_location) | Set-Content -Path $git_script_location
           ((Get-Content -path $task_location -Raw) -replace ">> %LOG_FILE% 2<&1", "") | Set-Content -Path $task_location
           ((Get-Content -path $snap_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $snap_script_location
           ((Get-Content -path $branch_script_location -Raw) -replace "0, 7", "0, 10") | Set-Content -Path $branch_script_location
           ((Get-Content -path $config_location -Raw) -replace "pgo=1", "pgo=0") | Set-Content -Path $config_location
-          ((Get-Content -path $config_location -Raw) -replace "8.0", "8.1") | Set-Content -Path $config_location
       - name: build PHP
         run: |
           C:\php-snap-build\php-sdk\bin\vswhere
