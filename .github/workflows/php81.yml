@@ -95,6 +95,11 @@ jobs:
           $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/PHP-8.1/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
           (Get-Content .\builds\${{ matrix.config }}.json | ConvertFrom-Json).revision_last > COMMIT
           Get-ChildItem .\builds\* -Include ("php-$php_version*.zip", "php-master*.zip") | Foreach-Object { Compress-Archive -update COMMIT $_ }
+          Get-ChildItem .\builds\*.zip | Foreach-Object {
+            if ($_.Name -match '.*(rc|RC)\d*-dev.*') {
+              Copy-Item -Path $_ -Destination (Join-Path -Path builds -ChildPath ($_.Name -replace '(rc|RC)\d+', '')) -Force
+            }
+          }
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
