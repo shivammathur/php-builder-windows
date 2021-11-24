@@ -43,7 +43,7 @@ $semver = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/$branc
 Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/shivammathur/php-builder-windows/releases/download/php$Version/php-$semver$ts-Win32-vs16-$Architecture.zip" -OutFile $Path\master.zip
 Expand-Archive -Path $Path\master.zip -DestinationPath $Path -Force
 Copy-Item $Path\php.ini-production -Destination $Path\php.ini
-Move-Item -Path $Path\ext\php_oci8_12c.dll -Destination $Path\ext\php_oci8.dll -Force
+Move-Item -Path $Path\ext\php_oci8*.dll -Destination $Path\ext\php_oci8.dll -Force
 $ts = 'nts'
 if($ThreadSafe) {
   $ts = 'ts'
