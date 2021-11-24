@@ -40,7 +40,7 @@ if($Version -match '8.[0-1]') {
   Expand-Archive -Path $Path\master.zip -DestinationPath $Path -Force
   Copy-Item $Path\php.ini-production -Destination $Path\php.ini
 }
-Move-Item -Path $Path\ext\php_oci8_12c.dll -Destination $Path\ext\php_oci8.dll -Force
+Move-Item -Path $Path\ext\php_oci8*.dll -Destination $Path\ext\php_oci8.dll -Force
 $ts = 'nts'
 if($ThreadSafe) {
   $ts = 'ts'
