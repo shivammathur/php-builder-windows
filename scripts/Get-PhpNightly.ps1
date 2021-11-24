@@ -33,7 +33,7 @@ $ts = '-nts'
 if($ThreadSafe) {
   $ts = ''
 }
-if($Version -eq '8.0') {
+if($Version -match '8.[0-1]') {
   Install-Php -Version $Version -Architecture $Architecture -ThreadSafe $ThreadSafe -InstallVC -Path $Path -TimeZone UTC -InitialPhpIni Production -Force
 } else {
   Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/shivammathur/php-builder-windows/releases/download/php$Version/php-$Version.0-dev$ts-Win32-vs16-$Architecture.zip" -OutFile $Path\master.zip
