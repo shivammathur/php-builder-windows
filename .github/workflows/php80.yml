@@ -35,7 +35,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@develop
         with:
-          php-version: 7.4
+          php-version: 8.1
           ini-values: disable_functions=mail
       - name: Test PHP
         run: php -v
@@ -45,7 +45,7 @@ jobs:
         run: |
           New-Item -ItemType "directory" -Path C:\php-snap-build
           cd C:\php-snap-build
-          git clone https://github.com/Microsoft/php-sdk-binary-tools.git php-sdk
+          git clone https://github.com/php/php-sdk-binary-tools.git php-sdk
           git clone https://github.com/php/web-rmtools.git rmtools
           New-Item -ItemType "directory" -Path C:\php-snap-build\${{ matrix.target }}
           New-Item -ItemType "directory" -Path C:\php-snap-build\snap_80\vs16\${{ matrix.arch }}
