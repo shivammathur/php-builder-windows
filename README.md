@@ -4,7 +4,7 @@
 <a href="https://github.com/shivammathur/php-builder-windows/blob/main/LICENSE" title="license"><img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-428f7e.svg"></a>
 <a href="https://github.com/shivammathur/php-builder-windows#Builds" title="builds"><img alt="PHP Versions Supported" src="https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg"></a>
 
-> Build PHP nightly for windows.
+> Build PHP snapshots for windows.
 
 ## Builds
 
@@ -25,12 +25,14 @@ Following configurations are build nightly.
 
 ## Install
 
+To install a PHP snapshot, open an elevated PowerShell session and run these commands. You can change the configure variables as per your requirements.
+
 ```ps1
 # Configure
 $php_dir = 'C:\tools\php' # Set this as per your setup
 $arch    = 'x64'          # Set x64 or x86
 $ts      = $False         # Set $False for nts or $True for ts
-$version = '8.1'          # Set 8.0 or 8.1
+$version = '8.1'          # Set 8.0, 8.1 or 8.2
 
 # Install
 New-Item -Path $php_dir -Type Directory -Force
@@ -48,6 +50,7 @@ Please see the [license file](LICENSE) for more information. This project has mu
 
 ## Dependencies
 
+- [php/php-src](https://github.com/php/php-src)
 - [php/web-rmtools](https://github.com/php/web-rmtools)
-- [microsoft/php-sdk-binary-tools](https://github.com/microsoft/php-sdk-binary-tools)
+- [php/php-sdk-binary-tools](https://github.com/php/php-sdk-binary-tools)
 - [Oracle instantclient](https://www.oracle.com/downloads/licenses/instant-client-lic.html)
