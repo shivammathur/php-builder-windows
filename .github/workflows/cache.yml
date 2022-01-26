@@ -1,0 +1,32 @@
+name: 'Cache PHP'
+on:
+  workflow_dispatch:
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['5.3', '5.4', '5.5', '5.6', '7.0', '7.1', '7.2', '7.3', '7.4', '8.0', '8.1']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Create artifact directory
+        run: mkdir builds
+      - name: Fetch files
+        run: bash scripts/fetch.sh ${{ matrix.php }} builds
+      - name: Update release
+        run: |
+          set -x
+          assets=()
+          for asset in ./builds/*; do
+            assets+=("$asset")
+          done
+          for release in php${{ matrix.php }}; do
+            if ! gh release view "$release"; then
+              gh release create "$release" "${assets[@]}" -t "$release" -n "$release"
+            else
+              gh release upload "$release" "${assets[@]}" --clobber
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
