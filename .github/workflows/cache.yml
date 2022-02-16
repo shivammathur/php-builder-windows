@@ -21,6 +21,8 @@ jobs:
           for asset in ./builds/*; do
             assets+=("$asset")
           done
+          assets+=("./scripts/Get-PhpNightly.ps1")
+          assets+=("./scripts/Get-Php.ps1")
           for release in php${{ matrix.php }}; do
             if ! gh release view "$release"; then
               gh release create "$release" "${assets[@]}" -t "$release" -n "$release"
