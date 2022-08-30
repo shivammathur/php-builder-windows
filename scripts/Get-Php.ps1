@@ -38,6 +38,8 @@ if($Version -eq '8.0') {
   $branch = 'PHP-8.0'
 } elseif($Version -eq '8.1') {
   $branch = 'PHP-8.1'
+} elseif($Version -eq '8.2') {
+  $branch = 'PHP-8.2'
 }
 $semver = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/$branch/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
 Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/shivammathur/php-builder-windows/releases/download/php$Version/php-$semver$ts-Win32-vs16-$Architecture.zip" -OutFile $Path\master.zip
