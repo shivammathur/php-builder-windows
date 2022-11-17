@@ -1,6 +1,6 @@
 # PHP Builder for Windows
 
-<a href="https://github.com/shivammathur/php-builder-windows" title="PHP Builder Windows"><img alt="Build status" src="https://github.com/shivammathur/php-builder-windows/workflows/Build%20PHP/badge.svg"></a>
+<a href="https://github.com/shivammathur/php-builder-windows" title="PHP Builder Windows"><img alt="Build status" src="https://github.com/shivammathur/php-builder-windows/workflows/Build%20PHP%20master/badge.svg"></a>
 <a href="https://github.com/shivammathur/php-builder-windows/blob/main/LICENSE" title="license"><img alt="LICENSE" src="https://img.shields.io/badge/license-MIT-428f7e.svg"></a>
 <a href="https://github.com/shivammathur/php-builder-windows#Builds" title="builds"><img alt="PHP Versions Supported" src="https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg"></a>
 
