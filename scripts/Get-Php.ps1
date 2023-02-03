@@ -26,6 +26,31 @@ param (
   [ValidateLength(1, [int]::MaxValue)]
   [string] $Version = '8.0'
 )
+
+Function Get-File {
+  param (
+    [string]$Url,
+    [string]$FallbackUrl,
+    [string]$OutFile,
+    [int]$Retries = 3
+  )
+
+  for ($i = 0; $i -lt $Retries; $i++) {
+    try {
+      Invoke-WebRequest -Uri $Url -OutFile $OutFile
+      break;
+    } catch {
+      if ($i -eq ($Retries - 1) -and ($null -ne $FallbackUrl)) {
+        try {
+          Invoke-WebRequest -Uri $FallbackUrl -OutFile $OutFile
+        } catch {
+          throw "Failed to download the build"
+        }
+      }
+    }
+  }
+}
+
 if(-not(Test-Path $Path)) {
   New-Item -Type 'directory' $Path
 }
@@ -42,7 +67,9 @@ if($Version -eq '8.0') {
   $branch = 'PHP-8.2'
 }
 $semver = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/$branch/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
-Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/shivammathur/php-builder-windows/releases/download/php$Version/php-$semver$ts-Win32-vs16-$Architecture.zip" -OutFile $Path\master.zip
+$file = "php-$semver$ts-Win32-vs16-$Architecture.zip"
+$repo = "shivammathur/php-builder-windows"
+Get-File -Url "https://github.com/$repo/releases/download/php$Version/$file" -FallbackUrl "https://dl.cloudsmith.io/public/$repo/raw/files/$file" -OutFile $Path\master.zip -Retries 3
 Expand-Archive -Path $Path\master.zip -DestinationPath $Path -Force
 Copy-Item $Path\php.ini-production -Destination $Path\php.ini
 Move-Item -Path $Path\ext\php_oci8*.dll -Destination $Path\ext\php_oci8.dll -Force
@@ -50,7 +77,7 @@ $ts = 'nts'
 if($ThreadSafe) {
   $ts = 'ts'
 }
-"xdebug", "pcov" | ForEach-Object { Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
+"xdebug", "pcov" | ForEach-Object { Get-File -PrimaryUrl "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
 $ini_content = @"
 extension_dir=$Path\ext
 default_charset=UTF-8

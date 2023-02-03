@@ -28,28 +28,28 @@ jobs:
     strategy:
       matrix: ${{fromJson(needs.get-matrix.outputs.php_matrix)}}
     steps:
-      
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Create artifact directory
+
+      - name: Create builds directory  
         run: mkdir builds
+
       - name: Fetch files
         run: bash scripts/fetch.sh ${{ matrix.php }} builds
-      - name: Update release
-        run: |
-          set -x
-          assets=()
-          for asset in ./builds/*; do
-            assets+=("$asset")
-          done
-          assets+=("./scripts/Get-PhpNightly.ps1")
-          assets+=("./scripts/Get-Php.ps1")
-          for release in php${{ matrix.php }}; do
-            if ! gh release view "$release"; then
-              gh release create "$release" "${assets[@]}" -t "$release" -n "$release"
-            else
-              gh release upload "$release" "${assets[@]}" --clobber
-            fi
-          done
-        env:
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install cloudsmith-cli
+        run: pip install --upgrade cloudsmith-cli
+
+      - name: Release
+        run: bash scripts/release.sh
+        env:          
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+          GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
+          GITHUB_RELEASES: php${{ matrix.php }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
