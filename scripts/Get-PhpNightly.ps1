@@ -32,17 +32,26 @@ Function Get-File {
     [string]$Url,
     [string]$FallbackUrl,
     [string]$OutFile,
-    [int]$Retries = 3
+    [int]$Retries = 3,
+    [int]$TimeoutSec = 0
   )
 
   for ($i = 0; $i -lt $Retries; $i++) {
     try {
-      Invoke-WebRequest -Uri $Url -OutFile $OutFile
+      if($null -ne $OutFile) {
+        Invoke-WebRequest -Uri $Url -OutFile $OutFile -TimeoutSec $TimeoutSec
+      } else {
+        Invoke-WebRequest -Uri $Url -TimeoutSec $TimeoutSec
+      }
       break;
     } catch {
       if ($i -eq ($Retries - 1) -and ($null -ne $FallbackUrl)) {
         try {
-          Invoke-WebRequest -Uri $FallbackUrl -OutFile $OutFile
+          if($null -ne $OutFile) {
+            Invoke-WebRequest -Uri $FallbackUrl -OutFile $OutFile -TimeoutSec $TimeoutSec
+          } else {
+            Invoke-WebRequest -Uri $FallbackUrl -TimeoutSec $TimeoutSec
+          }
         } catch {
           throw "Failed to download the build"
         }
@@ -72,7 +81,7 @@ $ts = 'nts'
 if($ThreadSafe) {
   $ts = 'ts'
 }
-"xdebug", "pcov" | ForEach-Object { Get-File -PrimaryUrl "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
+"xdebug", "pcov" | ForEach-Object { Get-File -Url "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
 $ini_content = @"
 extension_dir=$Path\ext
 default_charset=UTF-8
