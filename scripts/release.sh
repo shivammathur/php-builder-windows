@@ -12,7 +12,9 @@ release_create() {
 
 release_upload() {
   release=$1
-  bash scripts/retry.sh 5 5 gh release upload "$release" "${assets[@]}" --clobber
+  for asset in "${assets[@]}"; do
+    bash scripts/retry.sh 5 5 gh release upload "$release" "$asset" --clobber
+  done
 }
 
 set -x
