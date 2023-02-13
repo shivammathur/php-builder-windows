@@ -7,12 +7,12 @@ release_cds() {
 
 release_create() {
   release=$1
-  gh release create "$release" "${assets[@]}" -n "$release" -t "$release"
+  bash scripts/retry.sh 5 5 gh release create "$release" "${assets[@]}" -n "$release" -t "$release"
 }
 
 release_upload() {
   release=$1
-  gh release upload "$release" "${assets[@]}" --clobber
+  bash scripts/retry.sh 5 5 gh release upload "$release" "${assets[@]}" --clobber
 }
 
 set -x
