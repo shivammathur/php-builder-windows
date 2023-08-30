@@ -74,6 +74,8 @@ if($Version -eq '8.0') {
   $branch = 'PHP-8.1'
 } elseif($Version -eq '8.2') {
   $branch = 'PHP-8.2'
+} elseif($Version -eq '8.3') {
+  $branch = 'PHP-8.3'
 }
 $semver = Get-File -Url "https://raw.githubusercontent.com/php/php-src/$branch/main/php_version.h" -FallbackUrl "https://cdn.jsdelivr.net/gh/php/php-src@$branch/main/php_version.h" -TimeoutSec 3 | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
 $file = "php-$semver$ts-Win32-vs16-$Architecture.zip"
