@@ -5,17 +5,20 @@
 <a href="https://github.com/shivammathur/php-builder-windows#Builds" title="builds"><img alt="PHP Versions Supported" src="https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg"></a>
 <a href="https://cloudsmith.io/~shivammathur/repos/php-builder-windows" title="mirror"><img alt="cloudsmith mirror" src="https://img.shields.io/badge/builds-cloudsmith-blue?logo=cloudsmith"></a>
 
-> Build PHP snapshots for windows.
+> Build PHP snapshots for Windows.
 
 ## Builds
 
-Following configurations are build nightly.
+The following configurations are built nightly.
 
 - `nts-x64`, `nts-x64-AVX`, `ts-x64`, `nts-x86`, `ts-x86`.
 - `debug-pack`, `devel=pack` for each configuration.
 - `test pack` for the version.
 
-### PHP 8.3.0-dev/master
+### PHP 8.4.0-dev/master
+[https://github.com/shivammathur/php-builder-windows/releases/tag/php8.4](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.4)
+
+### PHP 8.3.0-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.3](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.3)
 
 ### PHP 8.2.x-dev
@@ -36,7 +39,7 @@ To install a PHP snapshot, open an elevated PowerShell session and run these com
 $php_dir = 'C:\tools\php' # Set this as per your setup
 $arch    = 'x64'          # Set x64 or x86
 $ts      = $False         # Set $False for nts or $True for ts
-$version = '8.1'          # Set 8.0, 8.1, 8.2, or 8.3
+$version = '8.1'          # Set 8.0, 8.1, 8.2, 8.3, o4 8.4
 
 # Install
 New-Item -Path $php_dir -Type Directory -Force
