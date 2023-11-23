@@ -24,7 +24,7 @@ param (
   [string] $Path,
   [Parameter(Mandatory = $false, Position = 4, HelpMessage = 'The PHP version')]
   [ValidateLength(1, [int]::MaxValue)]
-  [string] $Version = '8.2'
+  [string] $Version = '8.3'
 )
 
 Function Get-File {
@@ -67,7 +67,7 @@ $ts = '-nts'
 if($ThreadSafe) {
   $ts = ''
 }
-if($Version -match '8.[0-2]') {
+if($Version -match '8.[0-3]') {
   Install-Php -Version $Version -Architecture $Architecture -ThreadSafe $ThreadSafe -InstallVC -Path $Path -TimeZone UTC -InitialPhpIni Production -Force
 } else {
   $file = "php-$Version.0-dev$ts-Win32-vs16-$Architecture.zip"
