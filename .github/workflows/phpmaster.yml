@@ -46,7 +46,7 @@ jobs:
           New-Item -ItemType "directory" -Path C:\php-snap-build
           cd C:\php-snap-build
           git clone https://github.com/php/php-sdk-binary-tools.git php-sdk
-          git clone https://github.com/php/web-rmtools.git rmtools
+          git clone https://github.com/shivammathur/web-rmtools.git rmtools
           New-Item -ItemType "directory" -Path C:\php-snap-build\${{ matrix.target }}
           New-Item -ItemType "directory" -Path C:\php-snap-build\snap_master\vs16\${{ matrix.arch }}
           Copy-Item -Path C:\php-snap-build\rmtools\bin\rmtools_setvars.bat-dist -Destination C:\php-snap-build\rmtools\bin\rmtools_setvars.bat
