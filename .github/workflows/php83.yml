@@ -63,7 +63,7 @@ jobs:
           Invoke-WebRequest -UseBasicParsing -Uri https://download.oracle.com/otn_software/nt/instantclient/instantclient-sdk-$suffix.zip -OutFile $oci_dir\sdk.zip
           Expand-Archive -Path $oci_dir\instantclient.zip -DestinationPath $oci_dir -Force
           Expand-Archive -Path $oci_dir\sdk.zip -DestinationPath $oci_dir -Force
-          Get-ChildItem $oci_dir | ?{ $_.PSIsContainer } | Rename-Item -NewName instantclient_19_9
+          Get-ChildItem $oci_dir -Filter 'instantclient*' | ?{ $_.PSIsContainer } | Rename-Item -NewName instantclient_19_9
       - name: Patch Tools
         run: |
           $git_location="C:\Program Files\Git\cmd\git.exe"
