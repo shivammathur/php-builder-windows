@@ -31,7 +31,7 @@ jobs:
     name: Build PHP
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install PHP
         uses: shivammathur/setup-php@develop
         with:
@@ -104,7 +104,7 @@ jobs:
           (Get-Content .\builds\${{ matrix.config }}.json | ConvertFrom-Json).revision_last > COMMIT
           Get-ChildItem .\builds\* -Include ("php-$php_version*.zip", "php-master*.zip") | Foreach-Object { Compress-Archive -update COMMIT $_ }
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config }}
           path: builds
@@ -113,18 +113,18 @@ jobs:
     needs: build
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create builds directory  
         run: mkdir builds
 
       - name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: builds
 
       - name: Setup Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.x
 
