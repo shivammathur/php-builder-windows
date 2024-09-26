@@ -1,4 +1,4 @@
-name: 'Build PHP 8.3'
+name: 'Build PHP 8.4'
 on:
   push:
   pull_request:
@@ -7,27 +7,27 @@ on:
     - cron: '30 23 * * *'
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'skip-8.3')"
-    runs-on: windows-2019
+    if: "!contains(github.event.head_commit.message, 'skip-8.4')"
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: x64
             target: obj-x64
-            config: nts-windows-vs16-x64
+            config: nts-windows-vs17-x64
           - arch: x64
             target: obj-x64
-            config: ts-windows-vs16-x64
+            config: ts-windows-vs17-x64
           - arch: x64
             target: obj-x64
-            config: nts-windows-vs16-x64-avx
+            config: nts-windows-vs17-x64-avx
           - arch: x86
             target: obj
-            config: nts-windows-vs16-x86
+            config: nts-windows-vs17-x86
           - arch: x86
             target: obj
-            config: ts-windows-vs16-x86
+            config: ts-windows-vs17-x86
     name: Build PHP
     steps:
       - name: Checkout
@@ -35,7 +35,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@develop
         with:
-          php-version: 8.3
+          php-version: 8.4
           ini-values: disable_functions=mail
       - name: Test PHP
         run: php -v
@@ -48,7 +48,7 @@ jobs:
           git clone https://github.com/php/php-sdk-binary-tools.git php-sdk
           git clone https://github.com/shivammathur/web-rmtools.git rmtools
           New-Item -ItemType "directory" -Path C:\php-snap-build\${{ matrix.target }}
-          New-Item -ItemType "directory" -Path C:\php-snap-build\snap_83\vs16\${{ matrix.arch }}
+          New-Item -ItemType "directory" -Path C:\php-snap-build\snap_84\vs17\${{ matrix.arch }}
           Copy-Item -Path C:\php-snap-build\rmtools\bin\rmtools_setvars.bat-dist -Destination C:\php-snap-build\rmtools\bin\rmtools_setvars.bat
           Copy-Item -Path C:\php-snap-build\rmtools\data\config\credentials_ftps.php-dist -Destination C:\php-snap-build\rmtools\data\config\credentials_ftps.php
       - name: Add InstantClient
@@ -72,7 +72,7 @@ jobs:
           $git_script_location="C:\php-snap-build\rmtools\include\Git.php"
           $snap_script_location="C:\php-snap-build\rmtools\script\snap.php"
           $branch_script_location="C:\php-snap-build\rmtools\include\Branch.php"
-          $config_location="C:\php-snap-build\rmtools\data\config\branch\${{ matrix.arch }}\php83.ini"
+          $config_location="C:\php-snap-build\rmtools\data\config\branch\${{ matrix.arch }}\php84.ini"
 
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\git.exe", $git_location) | Set-Content -Path $git_script_location
           ((Get-Content -path $git_script_location -Raw) -replace "c:\\apps\\git\\bin\\tar.exe", $tar_location) | Set-Content -Path $git_script_location
@@ -84,16 +84,16 @@ jobs:
         run: |
           C:\php-snap-build\php-sdk\bin\vswhere
           $ErrorActionPreference = "Stop"
-          & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "php83 ${{ matrix.config }}"
+          & C:\php-snap-build\php-sdk\phpsdk-vs17-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "php84 ${{ matrix.config }}"
       - name: Collect Artifacts
         run: |
           New-Item -ItemType "directory" -Path builds
           Get-ChildItem C:\php-snap-build\${{ matrix.target }}\* -Recurse -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
-          Copy-Item -Path C:\php-snap-build\rmtools\data\db\PHP-8.3.json -Destination .\builds\${{ matrix.config }}.json
+          Copy-Item -Path C:\php-snap-build\rmtools\data\db\PHP-8.4.json -Destination .\builds\${{ matrix.config }}.json
           if((Get-ChildItem .\builds\*.zip).Count -lt 5) {
             exit 1
           }
-          $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/PHP-8.3/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
+          $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/PHP-8.4/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
           (Get-Content .\builds\${{ matrix.config }}.json | ConvertFrom-Json).revision_last > COMMIT
           Get-ChildItem .\builds\* -Include ("php-$php_version*.zip", "php-master*.zip") | Foreach-Object { Compress-Archive -update COMMIT $_ }
           Get-ChildItem .\builds\*.zip | Foreach-Object {
@@ -134,6 +134,6 @@ jobs:
         env:          
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
           GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
-          GITHUB_RELEASES: php8.3
+          GITHUB_RELEASES: php8.4
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

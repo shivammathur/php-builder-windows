@@ -7,27 +7,27 @@ on:
     - cron: '30 23 * * *'
 jobs:
   build:
-    if: "!contains(github.event.head_commit.message, 'skip-8.4')"
-    runs-on: windows-2019
+    if: "!contains(github.event.head_commit.message, 'skip-8.5')"
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
         include:
           - arch: x64
             target: obj-x64
-            config: nts-windows-vs16-x64
+            config: nts-windows-vs17-x64
           - arch: x64
             target: obj-x64
-            config: ts-windows-vs16-x64
+            config: ts-windows-vs17-x64
           - arch: x64
             target: obj-x64
-            config: nts-windows-vs16-x64-avx
+            config: nts-windows-vs17-x64-avx
           - arch: x86
             target: obj
-            config: nts-windows-vs16-x86
+            config: nts-windows-vs17-x86
           - arch: x86
             target: obj
-            config: ts-windows-vs16-x86
+            config: ts-windows-vs17-x86
     name: Build PHP
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
           git clone https://github.com/php/php-sdk-binary-tools.git php-sdk
           git clone https://github.com/shivammathur/web-rmtools.git rmtools
           New-Item -ItemType "directory" -Path C:\php-snap-build\${{ matrix.target }}
-          New-Item -ItemType "directory" -Path C:\php-snap-build\snap_master\vs16\${{ matrix.arch }}
+          New-Item -ItemType "directory" -Path C:\php-snap-build\snap_master\vs17\${{ matrix.arch }}
           Copy-Item -Path C:\php-snap-build\rmtools\bin\rmtools_setvars.bat-dist -Destination C:\php-snap-build\rmtools\bin\rmtools_setvars.bat
           Copy-Item -Path C:\php-snap-build\rmtools\data\config\credentials_ftps.php-dist -Destination C:\php-snap-build\rmtools\data\config\credentials_ftps.php
       - name: Add InstantClient
@@ -83,7 +83,7 @@ jobs:
         run: |
           C:\php-snap-build\php-sdk\bin\vswhere
           $ErrorActionPreference = "Stop"
-          & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "phpmaster ${{ matrix.config }}"
+          & C:\php-snap-build\php-sdk\phpsdk-vs17-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "phpmaster ${{ matrix.config }}"
       - name: Collect Artifacts
         run: |
           $php_version = Invoke-RestMethod https://raw.githubusercontent.com/php/php-src/master/main/php_version.h | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
@@ -92,7 +92,7 @@ jobs:
           Copy-Item -Path builds -Destination master -Container -Recurse
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
           Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace "win32","windows" }
-          if(("${{ matrix.config }}" -eq "ts-windows-vs16-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs16-x86")) {
+          if(("${{ matrix.config }}" -eq "ts-windows-vs17-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs17-x86")) {
             Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
           } else {
             Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master" }
@@ -136,6 +136,6 @@ jobs:
         env:          
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
           GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
-          GITHUB_RELEASES: php8.4 master
+          GITHUB_RELEASES: php8.5 master
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
