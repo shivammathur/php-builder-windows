@@ -18,10 +18,10 @@ The following configurations are built nightly.
 ### PHP 8.5.0-dev/master
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.5](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.5)
 
-### PHP 8.4.0-dev
+### PHP 8.4.x-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.4](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.4)
 
-### PHP 8.3.0-dev
+### PHP 8.3.x-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.3](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.3)
 
 ### PHP 8.2.x-dev
