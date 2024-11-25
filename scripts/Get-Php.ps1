@@ -24,7 +24,7 @@ param (
   [string] $Path,
   [Parameter(Mandatory = $false, Position = 4, HelpMessage = 'The PHP version')]
   [ValidateLength(1, [int]::MaxValue)]
-  [string] $Version = '8.3'
+  [string] $Version = '8.4'
 )
 
 Function Get-File {
