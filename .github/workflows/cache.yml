@@ -7,7 +7,7 @@ on:
       php-versions:
         description: 'PHP version to cache'
         default: '8.1 8.2 8.3 8.4'
-        required: false
+        required: true
 jobs:
   get-matrix:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
       - name: Get matrix
         id: set-matrix
         run: |
-          IFS=' ' read -r -a PHP_VERSIONS <<<"${{ github.event.inputs.php-versions }}"
+          IFS=' ' read -r -a PHP_VERSIONS <<<"${{ inputs.php-versions }}"
           php_array=()
           for php in "${PHP_VERSIONS[@]}"; do
             php_array+=("{\"php\": \"$php\"}")
