@@ -93,7 +93,10 @@ jobs:
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
           Get-ChildItem .\master -Filter '*win32*.zip' | ForEach-Object { Copy-Item $_.FullName "$($_.DirectoryName)\$($_.Name -replace 'win32','windows')" }
           if (("${{ matrix.config }}" -match 'ts-windows-vs17-x(64|x86)')) {
-            Get-ChildItem .\master -Filter '*.zip' | ForEach-Object { Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master-ts')) }
+            Get-ChildItem .\master -Filter '*.zip' | ForEach-Object { 
+              Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master-ts'))
+              Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master')) 
+            }
           } else {
             Get-ChildItem .\master -Filter '*.zip' | ForEach-Object { Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master')) }
           }
