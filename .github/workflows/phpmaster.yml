@@ -92,10 +92,10 @@ jobs:
           Copy-Item -Path builds -Destination master -Container -Recurse
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
           Get-ChildItem .\master -Filter '*win32*.zip' | ForEach-Object { Copy-Item $_.FullName "$($_.DirectoryName)\$($_.Name -replace 'win32','windows')" }
-          if(("${{ matrix.config }}" -eq "ts-windows-vs17-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs17-x86")) {
-            Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
+          if (("${{ matrix.config }}" -match 'ts-windows-vs17-x(64|x86)')) {
+            Get-ChildItem .\master -Filter '*.zip' | ForEach-Object { Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master-ts')) }
           } else {
-            Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master" }
+            Get-ChildItem .\master -Filter '*.zip' | ForEach-Object { Copy-Item $_.FullName (Join-Path $_.DirectoryName ($_.Name -replace $php_version,'master')) }
           }
           Get-ChildItem .\master\* -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
           if((Get-ChildItem .\builds\*.zip).Count -lt 5) {
