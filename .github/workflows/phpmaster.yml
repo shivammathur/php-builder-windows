@@ -91,7 +91,7 @@ jobs:
           Get-ChildItem C:\php-snap-build\${{ matrix.target }}\* -Recurse -Include php-*.zip | Foreach-Object { Copy-Item -Path $_ -Destination .\builds }
           Copy-Item -Path builds -Destination master -Container -Recurse
           Copy-Item -Path C:\php-snap-build\rmtools\data\db\master.json -Destination .\builds\${{ matrix.config }}.json
-          Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace "win32","windows" }
+          Get-ChildItem .\master -Filter *.zip | ForEach-Object { Copy-Item $_.FullName "$($_.DirectoryName)\$($_.Name -replace 'win32','windows')" }
           if(("${{ matrix.config }}" -eq "ts-windows-vs17-x64") -or ("${{ matrix.config }}" -eq "ts-windows-vs17-x86")) {
             Get-ChildItem .\master *.zip | Rename-Item -NewName { $_.name -replace $php_version,"master-ts" }
           } else {
