@@ -80,6 +80,7 @@ $file = "php-$semver$ts-Win32-$vs-$Architecture.zip"
 $repo = "shivammathur/php-builder-windows"
 Get-File -Url "https://github.com/$repo/releases/download/php$Version/$file" -FallbackUrl "https://dl.cloudsmith.io/public/$repo/raw/files/$file" -OutFile $Path\master.zip -Retries 3
 Expand-Archive -Path $Path\master.zip -DestinationPath $Path -Force
+Remove-Item -Path $Path\master.zip
 Copy-Item $Path\php.ini-production -Destination $Path\php.ini
 Move-Item -Path $Path\ext\php_oci8*.dll -Destination $Path\ext\php_oci8.dll -Force
 $ts = 'nts'
