@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, 'skip-8.3')"
-    runs-on: windows-2019
+    runs-on: windows-2022
     strategy:
       fail-fast: false
       matrix:
@@ -84,7 +84,7 @@ jobs:
         run: |
           C:\php-snap-build\php-sdk\bin\vswhere
           $ErrorActionPreference = "Stop"
-          & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "php83 ${{ matrix.config }}"
+          & C:\php-snap-build\php-sdk\phpsdk-vs16-${{ matrix.arch }}.bat -s 14.29.30133 -t C:\php-snap-build\rmtools\bin\snapshot_task.bat --task-args "php83 ${{ matrix.config }}"
       - name: Collect Artifacts
         run: |
           New-Item -ItemType "directory" -Path builds
