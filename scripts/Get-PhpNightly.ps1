@@ -83,12 +83,16 @@ if($ThreadSafe) {
   $ts = 'ts'
 }
 "xdebug", "pcov" | ForEach-Object { Get-File -Url "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
-$ini_content = @"
-extension_dir=$Path\ext
-default_charset=UTF-8
-zend_extension=php_opcache.dll
-opcache.enable=1
-opcache.jit_buffer_size=256M
-opcache.jit=1235
-"@
-Add-Content -Path $Path\php.ini -Value $ini_content
+$ini_content = @(
+  "extension_dir=$Path\ext"
+  "default_charset=UTF-8"
+  "opcache.enable=1"
+  "opcache.jit_buffer_size=256M"
+  "opcache.jit=1235"
+)
+if ($Version -lt [version]'8.5') {
+  $ini_content += "zend_extension=php_opcache.dll"
+} elseif (Test-Path $Path\ext\php_opcache.dll) {
+  Remove-Item $Path\ext\php_opcache.dll -Force
+}
+Add-Content -Path $Path\php.ini -Value ($ini_content -join [Environment]::NewLine)
