@@ -17,7 +17,7 @@ jobs:
       - name: Get matrix
         id: set-matrix
         run: |
-          IFS=' ' read -r -a PHP_VERSIONS <<<"${{ inputs.php-versions }}"
+          IFS=' ' read -r -a PHP_VERSIONS <<<"${{ inputs.php-versions || '8.1 8.2 8.3 8.4' }}"
           php_array=()
           for php in "${PHP_VERSIONS[@]}"; do
             php_array+=("{\"php\": \"$php\"}")
