@@ -15,7 +15,10 @@ The following configurations are built nightly.
 - `debug-pack`, `devel=pack` for each configuration.
 - `test pack` for the version.
 
-### PHP 8.5.0-dev/master
+### PHP 8.6.0-dev/master
+[https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6)
+
+### PHP 8.5.x-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.5](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.5)
 
 ### PHP 8.4.x-dev
