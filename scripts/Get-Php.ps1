@@ -24,7 +24,7 @@ param (
   [string] $Path,
   [Parameter(Mandatory = $false, Position = 4, HelpMessage = 'The PHP version')]
   [ValidateLength(1, [int]::MaxValue)]
-  [string] $Version = '8.4'
+  [string] $Version = '8.5'
 )
 
 Function Get-File {
@@ -68,7 +68,7 @@ if($ThreadSafe) {
   $ts = ''
 }
 $branch = 'master'
-if($Version -match '8.[0-5]') {
+if($Version -match '8.[0-6]') {
   $branch = "PHP-$Version"
 }
 $vs = 'vs17'
