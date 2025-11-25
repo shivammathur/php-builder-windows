@@ -31,29 +31,33 @@ Function Get-File {
   param (
     [string]$Url,
     [string]$FallbackUrl,
-    [string]$OutFile,
+    [string]$OutFile = '',
     [int]$Retries = 3,
     [int]$TimeoutSec = 0
   )
 
   for ($i = 0; $i -lt $Retries; $i++) {
     try {
-      if($null -ne $OutFile) {
+      if($OutFile -ne '') {
         Invoke-WebRequest -Uri $Url -OutFile $OutFile -TimeoutSec $TimeoutSec
       } else {
         Invoke-WebRequest -Uri $Url -TimeoutSec $TimeoutSec
       }
       break;
     } catch {
-      if ($i -eq ($Retries - 1) -and ($null -ne $FallbackUrl)) {
-        try {
-          if($null -ne $OutFile) {
-            Invoke-WebRequest -Uri $FallbackUrl -OutFile $OutFile -TimeoutSec $TimeoutSec
-          } else {
-            Invoke-WebRequest -Uri $FallbackUrl -TimeoutSec $TimeoutSec
+      if ($i -eq ($Retries - 1)) {
+        if($FallbackUrl) {
+          try {
+            if($OutFile -ne '') {
+              Invoke-WebRequest -Uri $FallbackUrl -OutFile $OutFile -TimeoutSec $TimeoutSec
+            } else {
+              Invoke-WebRequest -Uri $FallbackUrl -TimeoutSec $TimeoutSec
+            }
+          } catch {
+            throw "Failed to download the assets from $Url and $FallbackUrl"
           }
-        } catch {
-          throw "Failed to download the build"
+        } else {
+          throw "Failed to download the assets from $Url"
         }
       }
     }
