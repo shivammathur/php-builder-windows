@@ -1,13 +1,11 @@
-name: 'Cache PHP'
+name: 'Cleanup PHP Releases'
 permissions:
   contents: write
 on:
-  schedule:
-    - cron:  '15 1 */15 * *'
   workflow_dispatch:
     inputs:
       php-versions:
-        description: 'PHP version to cache'
+        description: 'PHP versions to cleanup'
         default: '8.2 8.3 8.4 8.5'
         required: true
 jobs:
@@ -26,7 +24,8 @@ jobs:
           done
           echo "php_matrix={\"include\":[$(echo "${php_array[@]}" | sed -e 's|} {|}, {|g')]}"
           echo "php_matrix={\"include\":[$(echo "${php_array[@]}" | sed -e 's|} {|}, {|g')]}" >> "$GITHUB_OUTPUT"
-  cache:
+
+  cleanup-preview:
     needs: get-matrix
     runs-on: ubuntu-latest
     strategy:
@@ -34,29 +33,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Create builds directory  
-        run: mkdir builds
-
-      - name: Fetch files
-        run: bash scripts/fetch.sh ${{ matrix.php }} builds
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-
-      - name: Install cloudsmith-cli
-        run: pip install --upgrade cloudsmith-cli
-
-      - name: Release
-        run: bash scripts/release.sh
-        env:          
-          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
-          GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
-          GITHUB_RELEASES: php${{ matrix.php }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find cleanup candidates
         run: bash scripts/release_cleanup_preview.sh cleanup-assets-${{ matrix.php }}.tsv
@@ -72,7 +48,7 @@ jobs:
           path: cleanup-assets-${{ matrix.php }}.tsv
 
   cleanup-apply:
-    needs: [get-matrix, cache]
+    needs: [get-matrix, cleanup-preview]
     runs-on: ubuntu-latest
     environment: release-cleanup
     strategy:
