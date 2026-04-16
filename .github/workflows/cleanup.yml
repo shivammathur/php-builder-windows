@@ -32,7 +32,7 @@ jobs:
       matrix: ${{fromJson(needs.get-matrix.outputs.php_matrix)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Find cleanup candidates
         run: bash scripts/release_cleanup_preview.sh cleanup-assets-${{ matrix.php }}.tsv
@@ -42,23 +42,62 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload cleanup list
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cleanup-assets-${{ matrix.php }}
           path: cleanup-assets-${{ matrix.php }}.tsv
 
+  get-cleanup-matrix:
+    needs: cleanup-preview
+    runs-on: ubuntu-latest
+    outputs:
+      cleanup_matrix: ${{ steps.set-cleanup-matrix.outputs.cleanup_matrix }}
+    steps:
+      - name: Download cleanup lists
+        continue-on-error: true
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cleanup-assets-*
+          path: cleanup-lists
+          merge-multiple: true
+
+      - name: Build cleanup matrix
+        id: set-cleanup-matrix
+        run: |
+          mkdir -p cleanup-lists
+          shopt -s nullglob
+          cleanup_array=()
+          for file in cleanup-lists/cleanup-assets-*.tsv; do
+            if [[ -s "$file" ]]; then
+              version=$(basename "$file")
+              version=${version#cleanup-assets-}
+              version=${version%.tsv}
+              cleanup_array+=("{\"php\": \"$version\"}")
+            fi
+          done
+
+          if (( ${#cleanup_array[@]} == 0 )); then
+            cleanup_matrix='{"include":[]}'
+          else
+            cleanup_matrix="{\"include\":[$(echo "${cleanup_array[@]}" | sed -e 's|} {|}, {|g')]}"
+          fi
+
+          echo "cleanup_matrix=$cleanup_matrix"
+          echo "cleanup_matrix=$cleanup_matrix" >> "$GITHUB_OUTPUT"
+
   cleanup-apply:
-    needs: [get-matrix, cleanup-preview]
+    if: needs.get-cleanup-matrix.outputs.cleanup_matrix != '{"include":[]}'
+    needs: get-cleanup-matrix
     runs-on: ubuntu-latest
     environment: release-cleanup
     strategy:
-      matrix: ${{fromJson(needs.get-matrix.outputs.php_matrix)}}
+      matrix: ${{fromJson(needs.get-cleanup-matrix.outputs.cleanup_matrix)}}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download cleanup list
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: cleanup-assets-${{ matrix.php }}
 
