@@ -27,14 +27,26 @@ done
 jq -Rn --arg release "$release" '
   [
     inputs as $name
-    | try (
-        $name
-        | capture("^(?<kind>php|php-debug-pack)-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?<dev>-dev)?(?<nts>-nts)?-[Ww]in32-[^-]+-(?<arch>x64|x86)\\.zip$")
-      ) catch empty
+    | (
+        try (
+          $name
+          | capture("^(?<kind>php|php-debug-pack|php-devel-pack)-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?<dev>-dev)?(?<nts>-nts)?-[Ww]in32-[^-]+-(?<arch>x64|x86)\\.zip$")
+          | .kind = if .kind == "php-debug-pack" then "debug" elif .kind == "php-devel-pack" then "devel" else "php" end
+          | .thread_safety = if .nts == "-nts" then "nts" else "ts" end
+        ) catch empty,
+        try (
+          $name
+          | capture("^php-test-pack-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?<dev>-dev)?\\.zip$")
+          | .kind = "test"
+        ) catch empty,
+        try (
+          $name
+          | capture("^php-(?<version>[0-9]+\\.[0-9]+\\.[0-9]+)(?<dev>-dev)?-src\\.zip$")
+          | .kind = "src"
+        ) catch empty
+      )
     | .name = $name
-    | .kind = if .kind == "php" then "php" else "debug" end
     | .stability = if .dev == "-dev" then "dev" else "stable" end
-    | .thread_safety = if .nts == "-nts" then "nts" else "ts" end
     | .version_parts = (.version | split(".") | map(tonumber))
   ]
   | sort_by(.version_parts)
@@ -47,6 +59,10 @@ jq -Rn --arg release "$release" '
     ) as $asset (
       {schema: 1, tag: $release};
       .[$asset.stability].version = $asset.version
-      | .[$asset.stability][$asset.kind][$asset.thread_safety][$asset.arch] = $asset.name
+      | if $asset.kind == "test" or $asset.kind == "src" then
+          .[$asset.stability][$asset.kind] = $asset.name
+        else
+          .[$asset.stability][$asset.kind][$asset.thread_safety][$asset.arch] = $asset.name
+        end
     )
 ' "$assets_file" > "$output"
