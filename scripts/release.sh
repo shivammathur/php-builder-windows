@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 release_cds() {
   sudo cp ./scripts/cds /usr/local/bin/cds && sudo sed -i "s|REPO|$GITHUB_REPOSITORY|" /usr/local/bin/cds && sudo chmod a+x /usr/local/bin/cds
   if [[ "$GITHUB_MESSAGE" != *skip-cloudsmith* ]]; then
@@ -17,6 +19,14 @@ release_upload() {
   done
 }
 
+release_manifest() {
+  release=$1
+  manifest_dir=$(mktemp -d)
+  bash scripts/manifest.sh "$release" "$manifest_dir/manifest.json"
+  bash scripts/retry.sh 5 5 gh release upload "$release" "$manifest_dir/manifest.json" --clobber
+  rm -rf "$manifest_dir"
+}
+
 set -x
 assets=()
 IFS=' ' read -r -a github_releases <<<"${GITHUB_RELEASES:?}"
@@ -30,5 +40,6 @@ for release in "${github_releases[@]}"; do
   else
     release_upload "$release"
   fi
+  release_manifest "$release"
 done
 release_cds
