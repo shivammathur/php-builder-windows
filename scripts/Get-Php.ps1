@@ -72,7 +72,7 @@ if($ThreadSafe) {
   $ts = ''
 }
 $branch = 'master'
-if($Version -match '8.[0-5]') {
+if($Version -match '8.[0-6]') {
   $branch = "PHP-$Version"
 }
 $vs = 'vs18'

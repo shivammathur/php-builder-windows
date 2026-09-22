@@ -16,7 +16,10 @@ The following configurations are built nightly.
 - `debug-pack`, `devel=pack` for each configuration.
 - `test pack` for the version.
 
-### PHP 8.6.0-dev/master
+### PHP 8.7.0-dev/master
+[https://github.com/shivammathur/php-builder-windows/releases/tag/php8.7](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.7)
+
+### PHP 8.6.0-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6)
 
 ### PHP 8.5.x-dev
@@ -43,7 +46,7 @@ To install a PHP snapshot, open an elevated PowerShell session and run these com
 $php_dir = 'C:\tools\php' # Set this as per your setup
 $arch    = 'x64'          # Set x64 or x86
 $ts      = $False         # Set $False for nts or $True for ts
-$version = '8.4'          # Set 8.0, 8.1, 8.2, 8.3, 8.4, or 8.5
+$version = '8.5'          # Set 8.0, 8.1, 8.2, 8.3, 8.4, or 8.5
 
 # Install
 New-Item -Path $php_dir -Type Directory -Force
