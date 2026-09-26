@@ -61,7 +61,11 @@ for release in "${releases[@]}"; do
   stable_versions=()
 
   while IFS=$'\t' read -r id name; do
-    [[ "$name" != *.zip ]] && continue
+    # Keep SBOM and VEX files under the same retention policy as their archives.
+    case "$name" in
+      *.zip|*.zip.cdx.json|*.zip.spdx.json|*.zip.openvex.json) ;;
+      *) continue ;;
+    esac
     if [[ "$name" == *-dev-* || "$name" == *-dev.* ]]; then
       version=$(echo "$name" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+-dev' | head -n1 || true)
       version=${version//$'\r'/}
