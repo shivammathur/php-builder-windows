@@ -1,0 +1,139 @@
+{
+  "repository": "shivammathur/php-builder-windows",
+  "minor": "5.3",
+  "tag": "php5.3",
+  "release_id": 57990661,
+  "files": [
+    {
+      "bytes": 17054409,
+      "name": "php-5.3.29-nts-Win32-VC9-x86.zip",
+      "sha256": "c5b8d071c6ce0702a22c834d0a35569ca172754956f3d103b7f8902633c533b0"
+    },
+    {
+      "bytes": 20216389,
+      "name": "php-5.3.29-src.zip",
+      "sha256": "3a1457fe8633a40ec1aa179ab844928fbb27b8523cd69e36ffa4ad2053444d46"
+    },
+    {
+      "bytes": 17203548,
+      "name": "php-5.3.29-Win32-VC9-x86.zip",
+      "sha256": "04fa4a5084cae231fcafd447730e70f828d61c7dd598e426b79445f3bcf4a221"
+    },
+    {
+      "bytes": 8836251,
+      "name": "php-debug-pack-5.3.29-nts-Win32-VC9-x86.zip",
+      "sha256": "a1cf30893f5884eaeb9c000d89038cf17a4446a33de3b6c8ad3fd658e7aa21e6"
+    },
+    {
+      "bytes": 9297086,
+      "name": "php-debug-pack-5.3.29-Win32-VC9-x86.zip",
+      "sha256": "2b3cb9ad0622a410f4c594006557e37b0e3d202652e8d0f8c1e550a52c35cdfb"
+    },
+    {
+      "bytes": 902085,
+      "name": "php-devel-pack-5.3.29-nts-Win32-VC9-x86.zip",
+      "sha256": "93850cdef7ac9939195e4937487ee93d4681e575d4bd70e8b5d627d5f2c7e57a"
+    },
+    {
+      "bytes": 902857,
+      "name": "php-devel-pack-5.3.29-Win32-VC9-x86.zip",
+      "sha256": "ac13e30ea1d6c067799834f4b9c423cde88f7694bd1539fa5ef8395f479ff941"
+    },
+    {
+      "bytes": 20216389,
+      "name": "php-test-pack-5.3.29.zip",
+      "sha256": "3a1457fe8633a40ec1aa179ab844928fbb27b8523cd69e36ffa4ad2053444d46"
+    },
+    {
+      "name": "manifest.json",
+      "bytes": 687,
+      "sha256": "770583ecb2aeece7c3b4bc06ed166b7f30a0d8078b99d333fa993bb7bcdd8d75",
+      "metadata": true,
+      "content_base64": "ewogICJzY2hlbWEiOiAxLAogICJ0YWciOiAicGhwNS4zIiwKICAic3RhYmxlIjogewogICAgInZlcnNpb24iOiAiNS4zLjI5IiwKICAgICJwaHAiOiB7CiAgICAgICJ0cyI6IHsKICAgICAgICAieDg2IjogInBocC01LjMuMjktV2luMzItVkM5LXg4Ni56aXAiCiAgICAgIH0sCiAgICAgICJudHMiOiB7CiAgICAgICAgIng4NiI6ICJwaHAtNS4zLjI5LW50cy1XaW4zMi1WQzkteDg2LnppcCIKICAgICAgfQogICAgfSwKICAgICJzcmMiOiAicGhwLTUuMy4yOS1zcmMuemlwIiwKICAgICJkZWJ1ZyI6IHsKICAgICAgInRzIjogewogICAgICAgICJ4ODYiOiAicGhwLWRlYnVnLXBhY2stNS4zLjI5LVdpbjMyLVZDOS14ODYuemlwIgogICAgICB9LAogICAgICAibnRzIjogewogICAgICAgICJ4ODYiOiAicGhwLWRlYnVnLXBhY2stNS4zLjI5LW50cy1XaW4zMi1WQzkteDg2LnppcCIKICAgICAgfQogICAgfSwKICAgICJkZXZlbCI6IHsKICAgICAgInRzIjogewogICAgICAgICJ4ODYiOiAicGhwLWRldmVsLXBhY2stNS4zLjI5LVdpbjMyLVZDOS14ODYuemlwIgogICAgICB9LAogICAgICAibnRzIjogewogICAgICAgICJ4ODYiOiAicGhwLWRldmVsLXBhY2stNS4zLjI5LW50cy1XaW4zMi1WQzkteDg2LnppcCIKICAgICAgfQogICAgfSwKICAgICJ0ZXN0IjogInBocC10ZXN0LXBhY2stNS4zLjI5LnppcCIKICB9Cn0K"
+    }
+  ],
+  "before": {
+    "Get-Php.ps1": {
+      "id": 320758738,
+      "size": 3877,
+      "digest": "sha256:239d0f975108bbd95e050da02ee63e4515943656beffe4095f4243393a921bc7",
+      "state": "uploaded"
+    },
+    "Get-PhpNightly.ps1": {
+      "id": 320758745,
+      "size": 3665,
+      "digest": "sha256:9816fb1990edc594f39b3206d9559fe4db36da7ad03fd120e552a2df0e294982",
+      "state": "uploaded"
+    },
+    "manifest.json": {
+      "id": 535544278,
+      "size": 687,
+      "digest": "sha256:01fe010d200b49172a30bc976c73456a54777f980ae336c1a45cd73564a0bc2c",
+      "state": "uploaded"
+    },
+    "php-5.3.29-nts-win32-VC9-x86.msi": {
+      "id": 215724097,
+      "size": 40116224,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-5.3.29-nts-Win32-VC9-x86.zip": {
+      "id": 215724115,
+      "size": 17034827,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-5.3.29-src.zip": {
+      "id": 215724122,
+      "size": 20869838,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-5.3.29-win32-VC9-x86.msi": {
+      "id": 215724105,
+      "size": 40239104,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-5.3.29-Win32-VC9-x86.zip": {
+      "id": 215724102,
+      "size": 17182832,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-debug-pack-5.3.29-nts-Win32-VC9-x86.zip": {
+      "id": 215724108,
+      "size": 8779174,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-debug-pack-5.3.29-Win32-VC9-x86.zip": {
+      "id": 215724129,
+      "size": 9223962,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-devel-pack-5.3.29-nts-Win32-VC9-x86.zip": {
+      "id": 215724111,
+      "size": 896099,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-devel-pack-5.3.29-Win32-VC9-x86.zip": {
+      "id": 215724095,
+      "size": 896855,
+      "digest": null,
+      "state": "uploaded"
+    },
+    "php-test-pack-5.3.29.zip": {
+      "id": 215724100,
+      "size": 11873749,
+      "digest": null,
+      "state": "uploaded"
+    }
+  },
+  "transport": "bundle",
+  "backup_replacements": false,
+  "authorization": "Explicit owner GitHub release publication; preserve approved package bytes and unrelated assets",
+  "no_rebuild": true
+}
