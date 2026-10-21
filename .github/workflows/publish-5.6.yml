@@ -27,7 +27,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PRIVATE_PACKAGE_ACCESS: ${{ secrets.PRIVATE_PACKAGE_ACCESS }}
-          PHP_SERIES: 5.6
+          PHP_SERIES: '5.6'
         run: python3 publication/publish.py publish "$PHP_SERIES"
       - name: Retain publication receipts
         if: always()
@@ -51,7 +51,7 @@ jobs:
       - name: Download and verify published files
         env:
           GH_TOKEN: ${{ github.token }}
-          PHP_SERIES: 5.6
+          PHP_SERIES: '5.6'
         run: python3 publication/publish.py verify "$PHP_SERIES"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
