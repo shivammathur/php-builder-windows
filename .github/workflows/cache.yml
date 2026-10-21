@@ -1,132 +1,105 @@
-name: 'Cache PHP'
-permissions:
-  contents: write
+name: Mirror GitHub release builds
+run-name: Mirror published PHP ${{ inputs.php-versions }} builds — ${{ inputs.ticket }}
 on:
-  schedule:
-    - cron:  '15 1 */15 * *'
   workflow_dispatch:
     inputs:
-      php-versions:
-        description: 'PHP version to cache'
-        default: '8.2 8.3 8.4 8.5'
+      ticket:
+        description: Dispatch tracking identifier
         required: true
+        type: string
+      php-versions:
+        description: 'Minor versions separated by spaces, or all (stable releases only)'
+        required: true
+        type: string
+        default: all
+permissions:
+  contents: read
 jobs:
-  get-matrix:
+  versions:
+    if: github.repository == 'shivammathur/php-builder-windows'
     runs-on: ubuntu-latest
     outputs:
-      php_matrix: ${{ steps.set-matrix.outputs.php_matrix }}
+      versions: ${{ steps.select.outputs.versions }}
+      shared_version: ${{ steps.select.outputs.shared_version }}
     steps:
-      - name: Get matrix
-        id: set-matrix
-        run: |
-          IFS=' ' read -r -a PHP_VERSIONS <<<"${{ inputs.php-versions || '8.2 8.3 8.4 8.5' }}"
-          php_array=()
-          for php in "${PHP_VERSIONS[@]}"; do
-            php_array+=("{\"php\": \"$php\"}")
-          done
-          echo "php_matrix={\"include\":[$(echo "${php_array[@]}" | sed -e 's|} {|}, {|g')]}"
-          echo "php_matrix={\"include\":[$(echo "${php_array[@]}" | sed -e 's|} {|}, {|g')]}" >> "$GITHUB_OUTPUT"
-  cache:
-    needs: get-matrix
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.get-matrix.outputs.php_matrix)}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Create builds directory  
-        run: mkdir builds
-
-      - name: Fetch files
-        run: bash scripts/fetch.sh ${{ matrix.php }} builds
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python-version: 3.x
-
-      - name: Install cloudsmith-cli
-        run: pip install --upgrade cloudsmith-cli
-
-      - name: Release
-        run: bash scripts/release.sh
-        env:          
-          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
-          GITHUB_MESSAGE: ${{ github.event.head_commit.message }}
-          GITHUB_RELEASES: php${{ matrix.php }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Find cleanup candidates
-        run: bash scripts/release_cleanup_preview.sh cleanup-assets-${{ matrix.php }}.tsv
+          persist-credentials: false
+      - id: select
         env:
-          GITHUB_RELEASES: php${{ matrix.php }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload cleanup list
+          PHP_VERSIONS: ${{ inputs.php-versions }}
+        run: python3 scripts/mirror-github-release.py matrix
+  mirror:
+    name: Mirror PHP ${{ matrix.php }}
+    needs: versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ${{ fromJSON(needs.versions.outputs.versions) }}
+    concurrency:
+      group: php-builder-windows-release-mirror-${{ matrix.php }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install transfer clients
+        run: |
+          python3 -m venv "$RUNNER_TEMP/mirror-tools"
+          "$RUNNER_TEMP/mirror-tools/bin/pip" install cloudsmith-cli
+          echo "$RUNNER_TEMP/mirror-tools/bin" >> "$GITHUB_PATH"
+      - name: Download and verify published release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PHP_VERSION: ${{ matrix.php }}
+          SOURCE_VERSION: ${{ matrix.php }}
+        run: python3 scripts/mirror-github-release.py download "$PHP_VERSION" "$RUNNER_TEMP/mirror" "$SOURCE_VERSION"
+      - name: Upload and verify existing mirrors
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: python3 scripts/mirror-github-release.py publish "$RUNNER_TEMP/mirror"
+      - name: Preserve transfer receipt
+        if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: cleanup-assets-${{ matrix.php }}
-          path: cleanup-assets-${{ matrix.php }}.tsv
-
-  get-cleanup-matrix:
-    needs: cache
+          name: mirror-receipt-${{ matrix.php }}
+          path: ${{ runner.temp }}/mirror/receipt.json
+          if-no-files-found: warn
+          retention-days: 30
+  shared:
+    name: Mirror shared installer scripts
+    needs: [versions, mirror]
     runs-on: ubuntu-latest
-    outputs:
-      cleanup_matrix: ${{ steps.set-cleanup-matrix.outputs.cleanup_matrix }}
+    timeout-minutes: 30
+    concurrency:
+      group: php-builder-windows-release-mirror-shared
+      cancel-in-progress: false
     steps:
-      - name: Download cleanup lists
-        continue-on-error: true
-        uses: actions/download-artifact@v8
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          pattern: cleanup-assets-*
-          path: cleanup-lists
-          merge-multiple: true
-
-      - name: Build cleanup matrix
-        id: set-cleanup-matrix
+          persist-credentials: false
+      - name: Install transfer clients
         run: |
-          mkdir -p cleanup-lists
-          shopt -s nullglob
-          cleanup_array=()
-          for file in cleanup-lists/cleanup-assets-*.tsv; do
-            if [[ -s "$file" ]]; then
-              version=$(basename "$file")
-              version=${version#cleanup-assets-}
-              version=${version%.tsv}
-              cleanup_array+=("{\"php\": \"$version\"}")
-            fi
-          done
-
-          if (( ${#cleanup_array[@]} == 0 )); then
-            cleanup_matrix='{"include":[]}'
-          else
-            cleanup_matrix="{\"include\":[$(echo "${cleanup_array[@]}" | sed -e 's|} {|}, {|g')]}"
-          fi
-
-          echo "cleanup_matrix=$cleanup_matrix"
-          echo "cleanup_matrix=$cleanup_matrix" >> "$GITHUB_OUTPUT"
-
-  cleanup-apply:
-    if: needs.get-cleanup-matrix.outputs.cleanup_matrix != '{"include":[]}'
-    needs: get-cleanup-matrix
-    runs-on: ubuntu-latest
-    environment: release-cleanup
-    strategy:
-      matrix: ${{fromJson(needs.get-cleanup-matrix.outputs.cleanup_matrix)}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Download cleanup list
-        uses: actions/download-artifact@v8
-        with:
-          name: cleanup-assets-${{ matrix.php }}
-
-      - name: Delete cleanup candidates
-        run: bash scripts/release_cleanup_apply.sh cleanup-assets-${{ matrix.php }}.tsv
+          python3 -m venv "$RUNNER_TEMP/mirror-tools"
+          "$RUNNER_TEMP/mirror-tools/bin/pip" install cloudsmith-cli
+          echo "$RUNNER_TEMP/mirror-tools/bin" >> "$GITHUB_PATH"
+      - name: Download and verify published release assets
         env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          PHP_VERSION: shared
+          SOURCE_VERSION: ${{ needs.versions.outputs.shared_version }}
+        run: python3 scripts/mirror-github-release.py download "$PHP_VERSION" "$RUNNER_TEMP/mirror" "$SOURCE_VERSION"
+      - name: Upload and verify existing mirrors
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: python3 scripts/mirror-github-release.py publish "$RUNNER_TEMP/mirror"
+      - name: Preserve transfer receipt
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: mirror-receipt-shared
+          path: ${{ runner.temp }}/mirror/receipt.json
+          if-no-files-found: warn
+          retention-days: 30

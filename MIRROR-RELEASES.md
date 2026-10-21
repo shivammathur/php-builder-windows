@@ -2,9 +2,15 @@
 
 `.github/workflows/mirror-github-releases.yml` is manual only. It copies already
 published release assets using the existing repository secrets. Pushing this
-branch does not publish anything. The workflow must be present on the default
-branch before GitHub exposes a new manual workflow; this branch is preparation
-only and does not change the default branch.
+branch does not publish anything.
+
+The branch also supplies the same transfer workflow at the already registered
+`.github/workflows/cache.yml` path, so it can be dispatched with
+`--ref feature/mirror-github-releases` without merging or changing the default
+branch. Pass `php-versions` and a unique `ticket` input. Dispatch this branch
+explicitly; the default branch's workflow at that path retains its original
+behavior. The registered entry contains only transfer jobs, with no build/test
+or GitHub release publication steps.
 
 Destination: Cloudsmith `shivammathur/php-builder-windows`.
 
