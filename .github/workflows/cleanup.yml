@@ -34,6 +34,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - name: Install cloudsmith-cli
+        run: pip install --upgrade cloudsmith-cli
+
       - name: Find cleanup candidates
         run: bash scripts/release_cleanup_preview.sh cleanup-assets-${{ matrix.php }}.tsv
         env:
@@ -41,11 +49,20 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Find Cloudsmith cleanup candidates
+        run: bash scripts/release_cleanup_preview.sh cleanup-cloudsmith-${{ matrix.php }}.tsv cloudsmith
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+          GITHUB_RELEASES: php${{ matrix.php }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+
       - name: Upload cleanup list
         uses: actions/upload-artifact@v7
         with:
           name: cleanup-assets-${{ matrix.php }}
-          path: cleanup-assets-${{ matrix.php }}.tsv
+          path: |
+            cleanup-assets-${{ matrix.php }}.tsv
+            cleanup-cloudsmith-${{ matrix.php }}.tsv
 
   get-cleanup-matrix:
     needs: cleanup-preview
@@ -68,10 +85,10 @@ jobs:
           shopt -s nullglob
           cleanup_array=()
           for file in cleanup-lists/cleanup-assets-*.tsv; do
-            if [[ -s "$file" ]]; then
-              version=$(basename "$file")
-              version=${version#cleanup-assets-}
-              version=${version%.tsv}
+            version=$(basename "$file")
+            version=${version#cleanup-assets-}
+            version=${version%.tsv}
+            if [[ -s "$file" || -s "cleanup-lists/cleanup-cloudsmith-$version.tsv" ]]; then
               cleanup_array+=("{\"php\": \"$version\"}")
             fi
           done
@@ -101,8 +118,22 @@ jobs:
         with:
           name: cleanup-assets-${{ matrix.php }}
 
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+
+      - name: Install cloudsmith-cli
+        run: pip install --upgrade cloudsmith-cli
+
       - name: Delete cleanup candidates
         run: bash scripts/release_cleanup_apply.sh cleanup-assets-${{ matrix.php }}.tsv
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Cloudsmith cleanup candidates
+        run: bash scripts/release_cleanup_apply.sh cleanup-cloudsmith-${{ matrix.php }}.tsv cloudsmith
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+          GITHUB_REPOSITORY: ${{ github.repository }}

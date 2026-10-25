@@ -57,6 +57,14 @@ Invoke-WebRequest -UseBasicParsing -Uri https://github.com/shivammathur/php-buil
 . $php_dir\php -v
 ```
 
+## Cleanup
+
+The **Cleanup PHP Releases** and **Cache PHP** workflows preview cleanup for both GitHub releases and the Cloudsmith mirror. Each keeps the newest stable and development version in each selected PHP series, including the matching ZIP, SBOM, and VEX files.
+
+The workflow summaries and `cleanup-assets-*` artifacts contain separate candidate lists for each service. Deletion uses those lists after approval through the `release-cleanup` environment. Cloudsmith uses the existing `CLOUDSMITH_API_KEY` secret.
+
+Run the cleanup regression checks with `python3 -m unittest discover -s scripts/tests` using Bash 4 or newer.
+
 ## License
 
 The code in this project is licensed under the [MIT license](http://choosealicense.com/licenses/mit/).
