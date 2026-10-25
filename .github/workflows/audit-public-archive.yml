@@ -1,0 +1,38 @@
+name: Inspect existing public build archives
+run-name: Archive diagnosis PHP ${{ inputs.minor }} ${{ inputs.ticket }}
+on:
+  push:
+    branches: [feature/public-windows-publication-20261025]
+  workflow_dispatch:
+    inputs:
+      minor:
+        type: choice
+        options: ['8.5']
+        required: true
+      ticket:
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Inspect existing archive bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PHP_SERIES: ${{ inputs.minor }}
+        run: python3 publication/audit-archive.py "$PHP_SERIES"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: archive-diagnosis-${{ inputs.minor }}
+          path: receipts/
+          if-no-files-found: error
+          retention-days: 90
