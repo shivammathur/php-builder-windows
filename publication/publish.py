@@ -121,7 +121,7 @@ def inspect_archive(data, plan):
     for name in runtime:
         suffix = name.removeprefix('php-' + version)
         allowed.update(f'php-{kind}-pack-{version}{suffix}' for kind in ('debug', 'devel'))
-        for kind in ('cdx', 'spdx'):
+        for kind in ('cdx', 'spdx', 'openvex'):
             sidecar = name + '.' + kind + '.json'
             if sidecar in files:
                 json.loads(files[sidecar]); allowed.add(sidecar)
@@ -130,7 +130,7 @@ def inspect_archive(data, plan):
         with zipfile.ZipFile(io.BytesIO(files[name])) as archive:
             assert archive.testzip() is None
         allowed.add(name)
-    assert set(files) - allowed <= {'source-provenance.json'}, 'Unreviewed aggregate files'
+    assert set(files) - allowed <= {'source-provenance.json'}, 'Unreviewed aggregate files: ' + ', '.join(sorted(set(files) - allowed - {'source-provenance.json'}))
     return {n: files[n] for n in sorted(allowed)}, review
 
 def publish(plan):
