@@ -442,5 +442,11 @@
       "state": "uploaded"
     }
   },
-  "inspected_files": null
+  "inspected_files": null,
+  "withheld_files": {
+    "php-test-pack-8.5.12.zip": {
+      "sha256": "048b8fe66ca9c3d0773a9beef01180de1a7f9ad2023821608c9c6c9fe7627e2e",
+      "reason": "User requested holding ZIPs with problems and publishing the rest. This new test-pack has inconsistent directory data; preserve the existing release test pack."
+    }
+  }
 }

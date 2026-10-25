@@ -125,12 +125,18 @@ def inspect_archive(data, plan):
             sidecar = name + '.' + kind + '.json'
             if sidecar in files:
                 json.loads(files[sidecar]); allowed.add(sidecar)
+    withheld = plan.get('withheld_files', {})
+    assert not withheld or (plan['minor'] == '8.5' and set(withheld) == {f'php-test-pack-{version}.zip'})
+    for name, hold in withheld.items():
+        assert name in files and sha(files[name]) == hold['sha256'], ('Withheld archive changed', name)
     for name in (f'php-{version}-src.zip', f'php-test-pack-{version}.zip'):
         assert name in files
+        if name in withheld:
+            continue
         with zipfile.ZipFile(io.BytesIO(files[name])) as archive:
             assert archive.testzip() is None
         allowed.add(name)
-    assert set(files) - allowed <= {'source-provenance.json'}, 'Unreviewed aggregate files: ' + ', '.join(sorted(set(files) - allowed - {'source-provenance.json'}))
+    assert set(files) - allowed - set(withheld) <= {'source-provenance.json'}, 'Unreviewed aggregate files: ' + ', '.join(sorted(set(files) - allowed - set(withheld) - {'source-provenance.json'}))
     return {n: files[n] for n in sorted(allowed)}, review
 
 def publish(plan):
@@ -150,9 +156,15 @@ def publish(plan):
     Path('work').mkdir(exist_ok=True)
     download(f'repos/{SOURCE}/actions/artifacts/{asset["id"]}/zip', 'work/aggregate.zip')
     files, review = inspect_archive(Path('work/aggregate.zip').read_bytes(), plan)
-    save('archive-review', {'artifact': asset, 'variants': review, 'files': [{'name': n, 'bytes': len(b), 'sha256': sha(b)} for n, b in files.items()]})
+    save('archive-review', {'artifact': asset, 'variants': review, 'withheld_files': plan.get('withheld_files', {}), 'files': [{'name': n, 'bytes': len(b), 'sha256': sha(b)} for n, b in files.items()]})
     before = inventory(plan)
     save('destination-before', before)
+    preserved = []
+    for name in plan.get('withheld_files', {}):
+        old = before.get(name)
+        approved = plan['before'].get(name)
+        assert old and approved and all(old.get(k) == approved.get(k) for k in ('id', 'size', 'digest', 'state')), ('Preserved asset changed', name)
+        preserved.append({k: old[k] for k in ('id', 'name', 'size', 'digest', 'state')})
     def upload(pair):
         name, data = pair
         file = {'name': name, 'bytes': len(data), 'sha256': sha(data)}
@@ -178,12 +190,15 @@ def publish(plan):
         if name not in files and name != 'manifest.json':
             assert name in after and after[name]['id'] == old['id'], ('Unrelated asset changed concurrently', name)
     uploaded.append({**expected_manifest, 'asset_id': after['manifest.json']['id']})
-    save('summary', {'repository': DEST, 'minor': plan['minor'], 'tag': plan['tag'], 'build_run_id': plan['build_run_id'], 'artifact_sha256': plan['artifact_sha256'], 'uploaded': True, 'files': uploaded, 'no_rebuild_or_php_retest': True})
+    save('summary', {'repository': DEST, 'minor': plan['minor'], 'tag': plan['tag'], 'build_run_id': plan['build_run_id'], 'artifact_sha256': plan['artifact_sha256'], 'uploaded': True, 'files': uploaded, 'withheld_files': plan.get('withheld_files', {}), 'preserved_assets': preserved, 'no_rebuild_or_php_retest': True})
 
 def verify(plan):
     receipt = json.loads(Path('publication-receipts/summary.json').read_text())
     assert receipt['build_run_id'] == plan['build_run_id'] and receipt['artifact_sha256'] == plan['artifact_sha256']
     assets = inventory(plan); Path('verify').mkdir(exist_ok=True)
+    for old in receipt.get('preserved_assets', []):
+        current = assets.get(old['name'])
+        assert current and all(current.get(k) == old[k] for k in ('id', 'size', 'digest', 'state')), ('Preserved asset changed', old['name'])
     def one(file):
         asset = assets.get(file['name']); assert same(asset, file)
         path = Path('verify', file['name'])
