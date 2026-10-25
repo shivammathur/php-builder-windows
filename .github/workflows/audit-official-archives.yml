@@ -1,0 +1,30 @@
+name: Inspect official PHP 8.5 Windows archives
+run-name: Official PHP 8.5 archive comparison ${{ inputs.ticket }}
+on:
+  push:
+    branches: [feature/public-windows-publication-20261025]
+  workflow_dispatch:
+    inputs:
+      ticket:
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  inspect:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify public archive checksums and ZIP structure
+        run: python3 publication/audit-official.py
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: official-archive-comparison-8.5
+          path: receipts/
+          if-no-files-found: error
+          retention-days: 90
