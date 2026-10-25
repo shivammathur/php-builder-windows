@@ -190,5 +190,121 @@
       "state": "uploaded"
     }
   },
-  "inspected_files": null
+  "inspected_files": [
+    {
+      "name": "php-7.3.33-Win32-VC15-x64.zip",
+      "bytes": 25409195,
+      "sha256": "e7eb4d18347d1cbf38d6ada49a1b6bee7750b42c6cc006d781c5839d89a20be0"
+    },
+    {
+      "name": "php-7.3.33-Win32-VC15-x64.zip.cdx.json",
+      "bytes": 41970,
+      "sha256": "3084cfa4bea24f86003d04e9a95e694ad1d284c5a5e6cb90cec7428e52577c01"
+    },
+    {
+      "name": "php-7.3.33-Win32-VC15-x86.zip",
+      "bytes": 23691674,
+      "sha256": "3442b7b68918e6a15edf64f18e3a08ca9718154b167f7104483e77faf5976832"
+    },
+    {
+      "name": "php-7.3.33-Win32-VC15-x64.zip.spdx.json",
+      "bytes": 36530,
+      "sha256": "530e75042e9dba27234d3f6c073533aeef064527de15fa2e060b07071874f4b3"
+    },
+    {
+      "name": "php-7.3.33-Win32-VC15-x86.zip.cdx.json",
+      "bytes": 41970,
+      "sha256": "1f3669fdb4d2bb50fc04fbadc04f23f246527004fcae8093f6faf61cbc6fdfc2"
+    },
+    {
+      "name": "php-7.3.33-Win32-VC15-x86.zip.spdx.json",
+      "bytes": 36530,
+      "sha256": "a701c1155d2a3385ac22c7e445700f59551f481ef1a265a0a906102dc507fb11"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x64.zip",
+      "bytes": 25286463,
+      "sha256": "ada99ffa4e62374acbd159d01ebf5d87ed1820e1e40e238083dde3e516322913"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x64.zip.cdx.json",
+      "bytes": 41983,
+      "sha256": "c89e1597bd91a7f712614c838acb93ccf18f051b38b91fb10ddceeee5d946c4d"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x64.zip.spdx.json",
+      "bytes": 36542,
+      "sha256": "e9fe1f0cedc6b2698ede540504737a5c0d5f0386bddf7d3511432a05ccb46f0d"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x86.zip",
+      "bytes": 23626250,
+      "sha256": "6bd266d5e370d381d1f87897e774cf0368c9905ecf0ba311e223cb6da2a7ae62"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x86.zip.cdx.json",
+      "bytes": 41983,
+      "sha256": "90e8eb5de2ace459ea4aea476391b00fa5281ddaf158763948ccca1a6bc8e644"
+    },
+    {
+      "name": "php-7.3.33-src.zip",
+      "bytes": 26806551,
+      "sha256": "e2d5df553a55419026d72ee1c64058ef6651d49ab87763256e6705ba26c397d6"
+    },
+    {
+      "name": "php-debug-pack-7.3.33-Win32-VC15-x64.zip",
+      "bytes": 23405532,
+      "sha256": "a7fb348c45ab8dd562a0e30354a74acd0d4bbaaeac8b15fb3dafd555a4745a2b"
+    },
+    {
+      "name": "php-7.3.33-nts-Win32-VC15-x86.zip.spdx.json",
+      "bytes": 36542,
+      "sha256": "2382721a8e0058d6172fe8b7bc374ad3693e719245362316836368bbe6a74624"
+    },
+    {
+      "name": "php-debug-pack-7.3.33-Win32-VC15-x86.zip",
+      "bytes": 24279773,
+      "sha256": "ec3fe6937575ae732c157eeeab69900f5a5f0d3ba5a1eb99a71de89bca59fef5"
+    },
+    {
+      "name": "php-debug-pack-7.3.33-nts-Win32-VC15-x64.zip",
+      "bytes": 23337371,
+      "sha256": "5f5dfbab10b1924bf139ee6bf8501ecae9729fad74125f28491bb8e15acebd77"
+    },
+    {
+      "name": "php-debug-pack-7.3.33-nts-Win32-VC15-x86.zip",
+      "bytes": 24210036,
+      "sha256": "fb05b2f1d00997e44e71b9276fb66a489e4532daeac2cccc6dd01c39c696c19f"
+    },
+    {
+      "name": "php-devel-pack-7.3.33-Win32-VC15-x64.zip",
+      "bytes": 1307424,
+      "sha256": "a3822db31a85db1a40428b3bde45ee607fcfe03cd55930cba090ab04e9691c44"
+    },
+    {
+      "name": "php-devel-pack-7.3.33-Win32-VC15-x86.zip",
+      "bytes": 1307832,
+      "sha256": "21b159240046169de57b241f8f9e8a72668924080a7d18f3a4453e19ea96106b"
+    },
+    {
+      "name": "php-devel-pack-7.3.33-nts-Win32-VC15-x64.zip",
+      "bytes": 1306230,
+      "sha256": "2d90287ee6a7b2cc6394baa55b55b04d36620ddea81f28340fee22ac2fe5bcb4"
+    },
+    {
+      "name": "php-devel-pack-7.3.33-nts-Win32-VC15-x86.zip",
+      "bytes": 1306511,
+      "sha256": "5dbb8d04b0ba777fcb3c8e58e9a3c3812b9daf368cc868884f24aac32895d70f"
+    },
+    {
+      "name": "php-test-pack-7.3.33.zip",
+      "bytes": 26806551,
+      "sha256": "e2d5df553a55419026d72ee1c64058ef6651d49ab87763256e6705ba26c397d6"
+    },
+    {
+      "name": "source-provenance.json",
+      "bytes": 402,
+      "sha256": "5e1a6ee451837fe0050cc203a8d7ff6e53a9b5e5a03135b648bf518ff1f0d747"
+    }
+  ]
 }
