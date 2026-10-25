@@ -2,7 +2,7 @@ name: Publish approved PHP to GitHub
 run-name: Publish PHP ${{ inputs.minor }} ${{ inputs.ticket }}
 on:
   push:
-    branches: [feature/oct-security-publication-20261021]
+    branches: [feature/public-windows-publication-20261025]
   workflow_dispatch:
     inputs:
       ticket:
@@ -14,14 +14,14 @@ on:
         options: ["5.3", "5.4", "5.5", "5.6", "7.0", "7.1", "7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]
 permissions:
   contents: write
+  actions: read
 concurrency:
-  group: oct-security-publication-${{ github.repository }}-${{ inputs.minor }}
+  group: public-windows-publication-${{ github.repository }}-${{ inputs.minor }}
   cancel-in-progress: false
 jobs:
   publish:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
-    environment: oct-publication-20261021-${{ inputs.minor }}
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -30,7 +30,6 @@ jobs:
       - name: Publish approved package bytes
         env:
           GH_TOKEN: ${{ github.token }}
-          PRIVATE_PACKAGE_ACCESS: ${{ secrets.PRIVATE_PACKAGE_ACCESS }}
           PHP_SERIES: '${{ inputs.minor }}'
         run: python3 publication/publish.py publish "$PHP_SERIES"
       - name: Retain publication receipts
@@ -52,6 +51,10 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: publication-${{ inputs.minor }}-${{ github.run_attempt }}
+          path: publication-receipts/
       - name: Download and verify published files
         env:
           GH_TOKEN: ${{ github.token }}

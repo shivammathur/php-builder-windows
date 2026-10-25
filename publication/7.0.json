@@ -1,193 +1,214 @@
 {
   "repository": "shivammathur/php-builder-windows",
   "minor": "7.0",
+  "version": "7.0.33",
   "tag": "php7.0",
   "release_id": 57990697,
-  "files": [
-    {
-      "bytes": 24611243,
-      "name": "php-7.0.33-nts-Win32-VC14-x64.zip",
-      "sha256": "37bc2a605f58cc470abcd61365c726dfaf528daae3ccf17dc20b8cb07bd93900"
-    },
-    {
-      "bytes": 22405926,
-      "name": "php-7.0.33-nts-Win32-VC14-x86.zip",
-      "sha256": "e68be52133d17ffc27034a3690c9ef7fcf6a52cebeccedb2e8707f2bdbc85a17"
-    },
-    {
-      "bytes": 25301949,
-      "name": "php-7.0.33-src.zip",
-      "sha256": "b5673fa3188b8b94790bf316900c00c71978338fb1c261e8a9060c0e0a821911"
-    },
-    {
-      "bytes": 24766768,
-      "name": "php-7.0.33-Win32-VC14-x64.zip",
-      "sha256": "d06c2f94f89009f8d51e269fb838509784977bdb1eff54246e2f79d257d9dc06"
-    },
-    {
-      "bytes": 22506638,
-      "name": "php-7.0.33-Win32-VC14-x86.zip",
-      "sha256": "ce459f681eeeb70b24a5549e492d8a78a3aa2ade1a873a0a928bd24dd21ca8ac"
-    },
-    {
-      "bytes": 22772382,
-      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x64.zip",
-      "sha256": "c22c92cc72b43c5a60e7f3b1984a36d29906ffcafefbb9b343ce888f6d8e935e"
-    },
-    {
-      "bytes": 22987229,
-      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x86.zip",
-      "sha256": "6fbd26678f5320fc78a3316ada616fb6f09192697d2f69daf90692abda44a797"
-    },
-    {
-      "bytes": 22875042,
-      "name": "php-debug-pack-7.0.33-Win32-VC14-x64.zip",
-      "sha256": "7e757c1fea15305be23ffde7dd1f84814d34fcda1fa7214acd2eff498a0ed75b"
-    },
-    {
-      "bytes": 23125721,
-      "name": "php-debug-pack-7.0.33-Win32-VC14-x86.zip",
-      "sha256": "5379e40b3f6ac59de132c75b8f979cdc643545ee7295cf7e975649f55aac6006"
-    },
-    {
-      "bytes": 1206172,
-      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x64.zip",
-      "sha256": "f8bcf5220b93e4061324f749392202c900012e557103e321e862e5feaff215e2"
-    },
-    {
-      "bytes": 1206701,
-      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x86.zip",
-      "sha256": "4afa6667ce492b8d20e61e328a07a98befcf7d2e0f221ce1c4e9b740bf8d76b2"
-    },
-    {
-      "bytes": 1207305,
-      "name": "php-devel-pack-7.0.33-Win32-VC14-x64.zip",
-      "sha256": "186915fdb46a90a7961fa0caaaec94fb15cb93bd9a6a208e21ca47da822b5065"
-    },
-    {
-      "bytes": 1207851,
-      "name": "php-devel-pack-7.0.33-Win32-VC14-x86.zip",
-      "sha256": "55a05fc6ac1755afcd32a103c0717dc0f9cf192b0e2f201951e8d19e6e887deb"
-    },
-    {
-      "bytes": 25301949,
-      "name": "php-test-pack-7.0.33.zip",
-      "sha256": "b5673fa3188b8b94790bf316900c00c71978338fb1c261e8a9060c0e0a821911"
-    },
-    {
-      "name": "manifest.json",
-      "bytes": 1037,
-      "sha256": "628d66afb3a72bfcaf4164ea7392ec8cabddef0d87df43e5685812f76431ded9",
-      "metadata": true,
-      "content_base64": "ewogICJzY2hlbWEiOiAxLAogICJ0YWciOiAicGhwNy4wIiwKICAic3RhYmxlIjogewogICAgInZlcnNpb24iOiAiNy4wLjMzIiwKICAgICJwaHAiOiB7CiAgICAgICJ0cyI6IHsKICAgICAgICAieDY0IjogInBocC03LjAuMzMtV2luMzItVkMxNC14NjQuemlwIiwKICAgICAgICAieDg2IjogInBocC03LjAuMzMtV2luMzItVkMxNC14ODYuemlwIgogICAgICB9LAogICAgICAibnRzIjogewogICAgICAgICJ4NjQiOiAicGhwLTcuMC4zMy1udHMtV2luMzItVkMxNC14NjQuemlwIiwKICAgICAgICAieDg2IjogInBocC03LjAuMzMtbnRzLVdpbjMyLVZDMTQteDg2LnppcCIKICAgICAgfQogICAgfSwKICAgICJzcmMiOiAicGhwLTcuMC4zMy1zcmMuemlwIiwKICAgICJkZWJ1ZyI6IHsKICAgICAgInRzIjogewogICAgICAgICJ4NjQiOiAicGhwLWRlYnVnLXBhY2stNy4wLjMzLVdpbjMyLVZDMTQteDY0LnppcCIsCiAgICAgICAgIng4NiI6ICJwaHAtZGVidWctcGFjay03LjAuMzMtV2luMzItVkMxNC14ODYuemlwIgogICAgICB9LAogICAgICAibnRzIjogewogICAgICAgICJ4NjQiOiAicGhwLWRlYnVnLXBhY2stNy4wLjMzLW50cy1XaW4zMi1WQzE0LXg2NC56aXAiLAogICAgICAgICJ4ODYiOiAicGhwLWRlYnVnLXBhY2stNy4wLjMzLW50cy1XaW4zMi1WQzE0LXg4Ni56aXAiCiAgICAgIH0KICAgIH0sCiAgICAiZGV2ZWwiOiB7CiAgICAgICJ0cyI6IHsKICAgICAgICAieDY0IjogInBocC1kZXZlbC1wYWNrLTcuMC4zMy1XaW4zMi1WQzE0LXg2NC56aXAiLAogICAgICAgICJ4ODYiOiAicGhwLWRldmVsLXBhY2stNy4wLjMzLVdpbjMyLVZDMTQteDg2LnppcCIKICAgICAgfSwKICAgICAgIm50cyI6IHsKICAgICAgICAieDY0IjogInBocC1kZXZlbC1wYWNrLTcuMC4zMy1udHMtV2luMzItVkMxNC14NjQuemlwIiwKICAgICAgICAieDg2IjogInBocC1kZXZlbC1wYWNrLTcuMC4zMy1udHMtV2luMzItVkMxNC14ODYuemlwIgogICAgICB9CiAgICB9LAogICAgInRlc3QiOiAicGhwLXRlc3QtcGFjay03LjAuMzMuemlwIgogIH0KfQo="
-    }
+  "build_run_id": 40142295761,
+  "build_revision": "31c3172fafdd75e2b6a02654314b717e92d2ab62",
+  "artifact_id": 12578994714,
+  "artifact_sha256": "d3649e7b2e99ed5b4565b29502943b435d88acf8543a9fd2c48dd0e729e99610",
+  "architectures": [
+    "x64",
+    "x86"
   ],
+  "smoke_prefix": "legacy-package-tests",
   "before": {
     "Get-Php.ps1": {
       "id": 320758787,
+      "name": "Get-Php.ps1",
       "size": 3877,
       "digest": "sha256:239d0f975108bbd95e050da02ee63e4515943656beffe4095f4243393a921bc7",
       "state": "uploaded"
     },
     "Get-PhpNightly.ps1": {
       "id": 320758786,
+      "name": "Get-PhpNightly.ps1",
       "size": 3665,
       "digest": "sha256:9816fb1990edc594f39b3206d9559fe4db36da7ad03fd120e552a2df0e294982",
       "state": "uploaded"
     },
     "manifest.json": {
-      "id": 535544027,
+      "id": 662796841,
+      "name": "manifest.json",
       "size": 1037,
-      "digest": "sha256:0f1a74bf9b905e63864615cfab0bb60ec7c1d28515dfe843e6cf729433b146b9",
+      "digest": "sha256:628d66afb3a72bfcaf4164ea7392ec8cabddef0d87df43e5685812f76431ded9",
       "state": "uploaded"
     },
     "php-7.0.33-nts-Win32-VC14-x64.zip": {
-      "id": 215724210,
-      "size": 24425705,
-      "digest": null,
+      "id": 662796529,
+      "name": "php-7.0.33-nts-Win32-VC14-x64.zip",
+      "size": 24611243,
+      "digest": "sha256:37bc2a605f58cc470abcd61365c726dfaf528daae3ccf17dc20b8cb07bd93900",
       "state": "uploaded"
     },
     "php-7.0.33-nts-Win32-VC14-x86.zip": {
-      "id": 215724145,
-      "size": 22346551,
-      "digest": null,
+      "id": 662796523,
+      "name": "php-7.0.33-nts-Win32-VC14-x86.zip",
+      "size": 22405926,
+      "digest": "sha256:e68be52133d17ffc27034a3690c9ef7fcf6a52cebeccedb2e8707f2bdbc85a17",
       "state": "uploaded"
     },
     "php-7.0.33-src.zip": {
-      "id": 215724230,
-      "size": 26103356,
-      "digest": null,
+      "id": 662796519,
+      "name": "php-7.0.33-src.zip",
+      "size": 25301949,
+      "digest": "sha256:b5673fa3188b8b94790bf316900c00c71978338fb1c261e8a9060c0e0a821911",
       "state": "uploaded"
     },
     "php-7.0.33-Win32-VC14-x64.zip": {
-      "id": 215724175,
-      "size": 24539294,
-      "digest": null,
+      "id": 662796524,
+      "name": "php-7.0.33-Win32-VC14-x64.zip",
+      "size": 24766768,
+      "digest": "sha256:d06c2f94f89009f8d51e269fb838509784977bdb1eff54246e2f79d257d9dc06",
       "state": "uploaded"
     },
     "php-7.0.33-Win32-VC14-x86.zip": {
-      "id": 215724193,
-      "size": 22419115,
-      "digest": null,
+      "id": 662796526,
+      "name": "php-7.0.33-Win32-VC14-x86.zip",
+      "size": 22506638,
+      "digest": "sha256:ce459f681eeeb70b24a5549e492d8a78a3aa2ade1a873a0a928bd24dd21ca8ac",
       "state": "uploaded"
     },
     "php-debug-pack-7.0.33-nts-Win32-VC14-x64.zip": {
-      "id": 215724138,
-      "size": 17539633,
-      "digest": null,
+      "id": 662796527,
+      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x64.zip",
+      "size": 22772382,
+      "digest": "sha256:c22c92cc72b43c5a60e7f3b1984a36d29906ffcafefbb9b343ce888f6d8e935e",
       "state": "uploaded"
     },
     "php-debug-pack-7.0.33-nts-Win32-VC14-x86.zip": {
-      "id": 215724219,
-      "size": 17531320,
-      "digest": null,
+      "id": 662796643,
+      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x86.zip",
+      "size": 22987229,
+      "digest": "sha256:6fbd26678f5320fc78a3316ada616fb6f09192697d2f69daf90692abda44a797",
       "state": "uploaded"
     },
     "php-debug-pack-7.0.33-Win32-VC14-x64.zip": {
-      "id": 215724128,
-      "size": 17607241,
-      "digest": null,
+      "id": 662796636,
+      "name": "php-debug-pack-7.0.33-Win32-VC14-x64.zip",
+      "size": 22875042,
+      "digest": "sha256:7e757c1fea15305be23ffde7dd1f84814d34fcda1fa7214acd2eff498a0ed75b",
       "state": "uploaded"
     },
     "php-debug-pack-7.0.33-Win32-VC14-x86.zip": {
-      "id": 215724166,
-      "size": 17647499,
-      "digest": null,
+      "id": 662796632,
+      "name": "php-debug-pack-7.0.33-Win32-VC14-x86.zip",
+      "size": 23125721,
+      "digest": "sha256:5379e40b3f6ac59de132c75b8f979cdc643545ee7295cf7e975649f55aac6006",
       "state": "uploaded"
     },
     "php-devel-pack-7.0.33-nts-Win32-VC14-x64.zip": {
-      "id": 215724183,
-      "size": 1217809,
-      "digest": null,
+      "id": 662796642,
+      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x64.zip",
+      "size": 1206172,
+      "digest": "sha256:f8bcf5220b93e4061324f749392202c900012e557103e321e862e5feaff215e2",
       "state": "uploaded"
     },
     "php-devel-pack-7.0.33-nts-Win32-VC14-x86.zip": {
-      "id": 215724158,
-      "size": 1218416,
-      "digest": null,
+      "id": 662796654,
+      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x86.zip",
+      "size": 1206701,
+      "digest": "sha256:4afa6667ce492b8d20e61e328a07a98befcf7d2e0f221ce1c4e9b740bf8d76b2",
       "state": "uploaded"
     },
     "php-devel-pack-7.0.33-Win32-VC14-x64.zip": {
-      "id": 215724203,
-      "size": 1218896,
-      "digest": null,
+      "id": 662796672,
+      "name": "php-devel-pack-7.0.33-Win32-VC14-x64.zip",
+      "size": 1207305,
+      "digest": "sha256:186915fdb46a90a7961fa0caaaec94fb15cb93bd9a6a208e21ca47da822b5065",
       "state": "uploaded"
     },
     "php-devel-pack-7.0.33-Win32-VC14-x86.zip": {
-      "id": 215724191,
-      "size": 1219472,
-      "digest": null,
+      "id": 662796699,
+      "name": "php-devel-pack-7.0.33-Win32-VC14-x86.zip",
+      "size": 1207851,
+      "digest": "sha256:55a05fc6ac1755afcd32a103c0717dc0f9cf192b0e2f201951e8d19e6e887deb",
       "state": "uploaded"
     },
     "php-test-pack-7.0.33.zip": {
-      "id": 215724121,
-      "size": 15657060,
-      "digest": null,
+      "id": 662796712,
+      "name": "php-test-pack-7.0.33.zip",
+      "size": 25301949,
+      "digest": "sha256:b5673fa3188b8b94790bf316900c00c71978338fb1c261e8a9060c0e0a821911",
       "state": "uploaded"
     }
   },
-  "transport": "bundle",
-  "backup_replacements": false,
-  "authorization": "Explicit owner GitHub release publication; preserve approved package bytes and unrelated assets",
-  "no_rebuild": true
+  "inspected_files": [
+    {
+      "name": "php-7.0.33-Win32-VC14-x64.zip",
+      "bytes": 24766234,
+      "sha256": "aca649bb89b868c4ac7e16e65d3cf3eb36b6b963abc88afd433303ad04a5e018"
+    },
+    {
+      "name": "php-7.0.33-Win32-VC14-x86.zip",
+      "bytes": 22506629,
+      "sha256": "73d39c7f4bc749ab1147c9113b0e9c947780e80b5159bb850615d843581afed6"
+    },
+    {
+      "name": "php-7.0.33-nts-Win32-VC14-x64.zip",
+      "bytes": 24609346,
+      "sha256": "2138ce596f7bdf8a0a86dd000c91a7b41b45ea6ed024ab86b428a982c173838b"
+    },
+    {
+      "name": "php-7.0.33-nts-Win32-VC14-x86.zip",
+      "bytes": 22405163,
+      "sha256": "1fac151935fb584b4dfc2cfc98180cffd2feae644e31ddbc009f7aeac1a57411"
+    },
+    {
+      "name": "php-7.0.33-src.zip",
+      "bytes": 25692578,
+      "sha256": "3620ebc8361f579a5206a0c4fa6041b7b53f49385b6c04dcbf55ae32487f2bfa"
+    },
+    {
+      "name": "php-debug-pack-7.0.33-Win32-VC14-x64.zip",
+      "bytes": 22861131,
+      "sha256": "7e32207a2c800278b82bebefd477aaffeffadee90d1537317ddc9adddb84dd21"
+    },
+    {
+      "name": "php-debug-pack-7.0.33-Win32-VC14-x86.zip",
+      "bytes": 23111188,
+      "sha256": "6269459bbb3c4c348db3b6cd825a833c4fa06a57f1bd868ee26a28d93c4fdaa7"
+    },
+    {
+      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x64.zip",
+      "bytes": 22761512,
+      "sha256": "b5e92eb63e79f5a516150eec64fc21c5b95f92e7bac7a5f8987617f796868379"
+    },
+    {
+      "name": "php-debug-pack-7.0.33-nts-Win32-VC14-x86.zip",
+      "bytes": 22959380,
+      "sha256": "661ece6182a7bee38b190f1471f90f6a1e27ecdd235ad3f1e30d666da0cff371"
+    },
+    {
+      "name": "php-devel-pack-7.0.33-Win32-VC14-x64.zip",
+      "bytes": 1207079,
+      "sha256": "db121324274ee72156e508b00de544342de6712083090dfcdd517c69e392f473"
+    },
+    {
+      "name": "php-devel-pack-7.0.33-Win32-VC14-x86.zip",
+      "bytes": 1207632,
+      "sha256": "0c369e0c7e96026ce9a92d944d65a81662533f104a44cb0f7c05b3b92c6ed74e"
+    },
+    {
+      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x64.zip",
+      "bytes": 1205946,
+      "sha256": "9d82094cc891a626a41ddc6c5ad4c7d8ad2168d757cb25e2febe0992e6d74176"
+    },
+    {
+      "name": "php-devel-pack-7.0.33-nts-Win32-VC14-x86.zip",
+      "bytes": 1206473,
+      "sha256": "eb1e0b3c94c4ae14756c2ca7b07be760933f843b8c379363f91bb6f2d0a36fff"
+    },
+    {
+      "name": "php-test-pack-7.0.33.zip",
+      "bytes": 25692578,
+      "sha256": "3620ebc8361f579a5206a0c4fa6041b7b53f49385b6c04dcbf55ae32487f2bfa"
+    },
+    {
+      "name": "source-provenance.json",
+      "bytes": 402,
+      "sha256": "f1c1c8efa184539da01bcabdb92759498c0969b2b484198118b0a18cc790931e"
+    }
+  ]
 }

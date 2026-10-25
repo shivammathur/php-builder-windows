@@ -2,7 +2,7 @@ name: Publish approved PHP 5.4 to GitHub
 run-name: Publish PHP 5.4 ${{ inputs.ticket }}
 on:
   push:
-    branches: [feature/oct-security-publication-20261021]
+    branches: [feature/public-windows-publication-20261025]
   workflow_dispatch:
     inputs:
       ticket:
@@ -10,14 +10,14 @@ on:
         required: true
 permissions:
   contents: write
+  actions: read
 concurrency:
-  group: oct-security-publication-${{ github.repository }}-5.4
+  group: public-windows-publication-${{ github.repository }}-5.4
   cancel-in-progress: false
 jobs:
   publish:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
-    environment: oct-publication-20261021-5.4
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -26,7 +26,6 @@ jobs:
       - name: Publish approved package bytes
         env:
           GH_TOKEN: ${{ github.token }}
-          PRIVATE_PACKAGE_ACCESS: ${{ secrets.PRIVATE_PACKAGE_ACCESS }}
           PHP_SERIES: '5.4'
         run: python3 publication/publish.py publish "$PHP_SERIES"
       - name: Retain publication receipts
@@ -48,6 +47,10 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: publication-5.4-${{ github.run_attempt }}
+          path: publication-receipts/
       - name: Download and verify published files
         env:
           GH_TOKEN: ${{ github.token }}
