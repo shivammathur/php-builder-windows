@@ -2,12 +2,17 @@
 set -euo pipefail
 
 output_file="${1:-cleanup-assets.tsv}"
+source="${2:-github}"
+case "$source" in
+  github|cloudsmith) ;;
+  *) echo "Unknown cleanup source: $source" >&2; exit 1 ;;
+esac
 : > "$output_file"
 
 summary_file="${GITHUB_STEP_SUMMARY:-}"
 if [[ -n "$summary_file" ]]; then
   {
-    echo "## Release cleanup candidates"
+    echo "## Release cleanup candidates ($source)"
     echo ""
   } >> "$summary_file"
 fi
@@ -15,42 +20,59 @@ fi
 IFS=' ' read -r -a releases <<< "${GITHUB_RELEASES:?}"
 
 for release in "${releases[@]}"; do
-  release_id=$(gh api \
-    -H "Accept: application/vnd.github+json" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    "/repos/${GITHUB_REPOSITORY}/releases/tags/${release}" \
-    -q '.id' || true)
-  if [[ -z "$release_id" || "$release_id" == "null" ]]; then
-    if [[ -n "$summary_file" ]]; then
-      echo "### $release" >> "$summary_file"
-      echo "_Release not found_" >> "$summary_file"
-      echo "" >> "$summary_file"
+  if [[ "$source" == "cloudsmith" ]]; then
+    if [[ ! "$release" =~ ^php[0-9]+\.[0-9]+$ ]]; then
+      echo "Invalid PHP release: $release" >&2
+      exit 1
     fi
-    continue
-  fi
-
-  assets=""
-  page=1
-  while true; do
-    page_assets=$(gh api \
+    # Cloudsmith has no release tags. Search each series independently, then
+    # check filenames below so matches in package descriptions cannot cross series.
+    assets=$(cloudsmith list packages "${GITHUB_REPOSITORY:?}" \
+      --query "${release#php}" --page-all --output-format json \
+      --error-retry-max 5 --error-retry-backoff 5 |
+      jq -r '.data[] | select(.format == "raw") | [.slug_perm, .filename] | @tsv')
+  else
+    release_id=$(gh api \
       -H "Accept: application/vnd.github+json" \
       -H "X-GitHub-Api-Version: 2022-11-28" \
-      "/repos/${GITHUB_REPOSITORY}/releases/${release_id}/assets?per_page=100&page=${page}" \
-      -q '.[] | [.id, .name] | @tsv' || true)
-    [[ -z "$page_assets" ]] && break
-    if [[ -z "$assets" ]]; then
-      assets="$page_assets"
-    else
-      assets+=$'\n'
-      assets+="$page_assets"
+      "/repos/${GITHUB_REPOSITORY}/releases/tags/${release}" \
+      -q '.id' || true)
+    if [[ -z "$release_id" || "$release_id" == "null" ]]; then
+      if [[ -n "$summary_file" ]]; then
+        {
+          echo "### $release"
+          echo "_Release not found_"
+          echo ""
+        } >> "$summary_file"
+      fi
+      continue
     fi
-    ((page++))
-  done
+
+    assets=""
+    page=1
+    while true; do
+      page_assets=$(gh api \
+        -H "Accept: application/vnd.github+json" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        "/repos/${GITHUB_REPOSITORY}/releases/${release_id}/assets?per_page=100&page=${page}" \
+        -q '.[] | [.id, .name] | @tsv' || true)
+      [[ -z "$page_assets" ]] && break
+      if [[ -z "$assets" ]]; then
+        assets="$page_assets"
+      else
+        assets+=$'\n'
+        assets+="$page_assets"
+      fi
+      ((page++))
+    done
+  fi
   if [[ -z "$assets" ]]; then
     if [[ -n "$summary_file" ]]; then
-      echo "### $release" >> "$summary_file"
-      echo "_No assets found_" >> "$summary_file"
-      echo "" >> "$summary_file"
+      {
+        echo "### $release"
+        echo "_No assets found_"
+        echo ""
+      } >> "$summary_file"
     fi
     continue
   fi
@@ -66,6 +88,11 @@ for release in "${releases[@]}"; do
       *.zip|*.zip.cdx.json|*.zip.spdx.json|*.zip.openvex.json) ;;
       *) continue ;;
     esac
+    if [[ "$source" == "cloudsmith" ]]; then
+      [[ "$name" == php-* ]] || continue
+      package_version=$(echo "$name" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1 || true)
+      [[ "$package_version" == "${release#php}."* ]] || continue
+    fi
     if [[ "$name" == *-dev-* || "$name" == *-dev.* ]]; then
       version=$(echo "$name" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+-dev' | head -n1 || true)
       version=${version//$'\r'/}
