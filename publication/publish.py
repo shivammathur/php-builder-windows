@@ -116,7 +116,15 @@ def inspect_archive(data, plan):
                     headers = [n for n in pack.namelist() if n.endswith('/php_version.h') or n == 'php_version.h']
                     assert len(headers) == 1 and f'#define PHP_VERSION "{version}"'.encode() in pack.read(headers[0])
                     assert any(n.endswith('.lib') for n in pack.namelist())
-        review.append({'archive': name, 'pe_files': pe_count, 'data_only_dlls': data_dlls})
+                    if plan.get('bison'):
+                        parser_names = [n for n in pack.namelist() if n.replace('\\', '/').endswith('/Zend/zend_language_parser.h')]
+                        assert len(parser_names) == 1, 'Missing Zend parser header'
+                        parser = pack.read(parser_names[0]).decode('utf-8')
+                        banner = re.search(r'made by GNU Bison ([0-9.]+)', parser)
+                        assert banner and banner[1].rstrip('.') == plan['bison'], 'Wrong Bison version'
+                        tokens = {k: int(v) for k, v in re.findall(r'\b(T_[A-Z_0-9]+)\s*=\s*(\d+)', parser)}
+                        assert tokens == plan['official_windows_tokens'], 'Official Windows token mismatch'
+        review.append({'archive': name, 'pe_files': pe_count, 'data_only_dlls': data_dlls, 'bison': plan.get('bison'), 'official_windows_tokens_matched': len(plan.get('official_windows_tokens', {}))})
     allowed = set(runtime)
     for name in runtime:
         suffix = name.removeprefix('php-' + version)
@@ -142,6 +150,9 @@ def inspect_archive(data, plan):
 def publish(plan):
     run = api(f'repos/{SOURCE}/actions/runs/{plan["build_run_id"]}')
     assert run['head_sha'] == plan['build_revision']
+    if plan.get('sdk_tag'):
+        sdk = api('repos/php/php-sdk-binary-tools/git/ref/tags/' + plan['sdk_tag'])
+        assert sdk['object']['sha'] == plan['sdk_commit'], 'SDK tag changed since build dispatch'
     pages = json.loads(subprocess.check_output(['gh', 'api', f'repos/{SOURCE}/actions/runs/{run["id"]}/jobs?per_page=100', '--paginate', '--slurp']))
     jobs = [j for page in pages for j in page['jobs']]
     expected = {(a, t) for a in plan['architectures'] for t in ('nts', 'ts')}
