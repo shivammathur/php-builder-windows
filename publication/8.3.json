@@ -587,5 +587,11 @@
       "archive_sha256": "fb7f20033eecd03f7bf7239b3b0b69159d9960bdf7ab28c4b253f383bdc76b79",
       "header_sha256": "6e84efaeceabe64d7d9d795fc98f9938acb553cb556eb9fad4fe65255deeccfe"
     }
-  ]
+  ],
+  "withheld_files": {
+    "php-test-pack-8.3.36.zip": {
+      "sha256": "aedee5d151d8ccee844aa8ee3422ebd0129b6cc809ee4d7098aea18ca5d6de7d",
+      "reason": "Malformed central directory; preserve the existing fully verified PHP 8.3.36 test pack. All thirteen other ZIPs and twelve sidecars passed review."
+    }
+  }
 }

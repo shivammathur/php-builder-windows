@@ -134,7 +134,7 @@ def inspect_archive(data, plan):
             if sidecar in files:
                 json.loads(files[sidecar]); allowed.add(sidecar)
     withheld = plan.get('withheld_files', {})
-    assert not withheld or (plan['minor'] == '8.5' and set(withheld) == {f'php-test-pack-{version}.zip'})
+    assert not withheld or (plan['minor'] in ('8.3', '8.5') and set(withheld) == {f'php-test-pack-{version}.zip'})
     for name, hold in withheld.items():
         assert name in files and sha(files[name]) == hold['sha256'], ('Withheld archive changed', name)
     for name in (f'php-{version}-src.zip', f'php-test-pack-{version}.zip'):
