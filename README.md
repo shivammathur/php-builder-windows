@@ -19,7 +19,7 @@ The following configurations are built nightly.
 ### PHP 8.7.0-dev/master
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.7](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.7)
 
-### PHP 8.6.0-dev
+### PHP 8.6.x-dev
 [https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6](https://github.com/shivammathur/php-builder-windows/releases/tag/php8.6)
 
 ### PHP 8.5.x-dev
