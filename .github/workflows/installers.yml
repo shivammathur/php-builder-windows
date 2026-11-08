@@ -1,0 +1,40 @@
+name: Publish Installers
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/Get-Php.ps1
+      - scripts/Get-PhpNightly.ps1
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+      - name: Install Cloudsmith CLI
+        run: pip install --upgrade cloudsmith-cli
+      - name: Update existing release installers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # shellcheck disable=SC2016
+          gh api "repos/$GITHUB_REPOSITORY/releases" --paginate --jq '.[] | .tag_name as $tag | .assets[] | select(.name == "Get-Php.ps1" or .name == "Get-PhpNightly.ps1") | [$tag, .name, .digest] | @tsv' > installers.tsv
+          while IFS=$'\t' read -r tag name digest; do
+            file="scripts/$name"
+            expected="sha256:$(sha256sum "$file" | cut -d ' ' -f 1)"
+            if [[ "$digest" != "$expected" ]]; then
+              bash scripts/retry.sh 5 5 gh release upload "$tag" "$file" --clobber
+            fi
+          done < installers.tsv
+      - name: Update Cloudsmith installers
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: |
+          for file in scripts/Get-Php.ps1 scripts/Get-PhpNightly.ps1; do
+            name="$(basename "$file")"
+            cloudsmith push raw "$GITHUB_REPOSITORY" "$file" --republish --summary "$name" --description "$name"
+          done
