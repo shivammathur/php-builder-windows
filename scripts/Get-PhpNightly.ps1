@@ -82,11 +82,6 @@ if($Version -match '8.[0-5]') {
   Copy-Item $Path\php.ini-production -Destination $Path\php.ini
 }
 Move-Item -Path $Path\ext\php_oci8*.dll -Destination $Path\ext\php_oci8.dll -Force
-$ts = 'nts'
-if($ThreadSafe) {
-  $ts = 'ts'
-}
-"xdebug", "pcov" | ForEach-Object { Get-File -Url "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/php$Version`_$ts`_$Architecture`_$_.dll" -OutFile $Path"\ext\php`_$_.dll" }
 $ini_content = @(
   "extension_dir=$Path\ext"
   "default_charset=UTF-8"
@@ -100,3 +95,12 @@ if ($Version -lt [version]'8.5') {
   Remove-Item $Path\ext\php_opcache.dll -Force
 }
 Add-Content -Path $Path\php.ini -Value ($ini_content -join [Environment]::NewLine)
+
+$ts = 'nts'
+if($ThreadSafe) {
+  $ts = 'ts'
+}
+"xdebug", "pcov" | ForEach-Object {
+  $extension_file = "php${Version}_${ts}_${Architecture}_$_.dll"
+  Get-File -Url "https://github.com/shivammathur/php-extensions-windows/releases/latest/download/$extension_file" -FallbackUrl "https://artifacts.php-extensions-windows.setup-php.com/$extension_file" -OutFile "$Path\ext\php_$_.dll" -TimeoutSec 30
+}
