@@ -1,8 +1,8 @@
 <#
 .Synopsis
-Installs PHP nightly.
+Installs PHP for Windows.
 .Description
-Download and installs a nightly version of PHP.
+Downloads and installs stable PHP 8.6 or a PHP snapshot for other versions.
 .Parameter Architecture
 The architecture of the PHP to be installed (x86 for 32-bit, x64 for 64-bit).
 .Parameter ThreadSafe
@@ -24,7 +24,7 @@ param (
   [string] $Path,
   [Parameter(Mandatory = $false, Position = 4, HelpMessage = 'The PHP version')]
   [ValidateLength(1, [int]::MaxValue)]
-  [string] $Version = '8.5'
+  [string] $Version = '8.6'
 )
 
 Function Get-File {
@@ -71,20 +71,42 @@ $ts = '-nts'
 if($ThreadSafe) {
   $ts = ''
 }
-$branch = 'master'
-if($Version -match '8.[0-6]') {
-  $branch = "PHP-$Version"
-}
-$vs = 'vs18'
-if($Version -match '8.[4-5]') {
-  $vs = 'vs17'
-} elseif($Version -match '8.[0-3]') {
-  $vs = 'vs16'
-}
-$semver = Get-File -Url "https://raw.githubusercontent.com/php/php-src/$branch/main/php_version.h" -FallbackUrl "https://cdn.jsdelivr.net/gh/php/php-src@$branch/main/php_version.h" -TimeoutSec 3 | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
-$file = "php-$semver$ts-Win32-$vs-$Architecture.zip"
 $repo = "shivammathur/php-builder-windows"
-Get-File -Url "https://github.com/$repo/releases/download/php$Version/$file" -FallbackUrl "https://dl.cloudsmith.io/public/$repo/raw/files/$file" -OutFile $Path\master.zip -Retries 3
+$release_url = "https://github.com/$repo/releases/download/php$Version"
+if($Version -eq '8.6') {
+  $windows_releases = 'https://downloads.php.net/~windows/releases'
+  $thread_safety = if($ThreadSafe) { 'ts' } else { 'nts' }
+  $file = $null
+  try {
+    $manifest = (Get-File -Url "$release_url/manifest.json" -TimeoutSec 3).Content | ConvertFrom-Json
+    $file = $manifest.stable.php.$thread_safety.$Architecture
+  } catch {
+    Write-Verbose "Could not read the PHP $Version release manifest: $_"
+  }
+  if(-not $file) {
+    $releases = (Get-File -Url "$windows_releases/releases.json" -TimeoutSec 3).Content | ConvertFrom-Json
+    $file = $releases.$Version."$thread_safety-vs18-$Architecture".zip.path
+  }
+  if(-not $file) {
+    throw "No stable PHP $Version Windows ZIP is available for $thread_safety $Architecture"
+  }
+  $fallback_url = "$windows_releases/$file"
+} else {
+  $branch = 'master'
+  if($Version -match '^8\.[0-6](?!\d)') {
+    $branch = "PHP-$Version"
+  }
+  $vs = 'vs18'
+  if($Version -match '8.[4-5]') {
+    $vs = 'vs17'
+  } elseif($Version -match '8.[0-3]') {
+    $vs = 'vs16'
+  }
+  $semver = Get-File -Url "https://raw.githubusercontent.com/php/php-src/$branch/main/php_version.h" -FallbackUrl "https://cdn.jsdelivr.net/gh/php/php-src@$branch/main/php_version.h" -TimeoutSec 3 | Where-Object { $_  -match 'PHP_VERSION "(.*)"' } | Foreach-Object {$Matches[1]}
+  $file = "php-$semver$ts-Win32-$vs-$Architecture.zip"
+  $fallback_url = "https://dl.cloudsmith.io/public/$repo/raw/files/$file"
+}
+Get-File -Url "$release_url/$file" -FallbackUrl $fallback_url -OutFile $Path\master.zip -Retries 3
 Expand-Archive -Path $Path\master.zip -DestinationPath $Path -Force
 Remove-Item -Path $Path\master.zip
 Copy-Item $Path\php.ini-production -Destination $Path\php.ini
